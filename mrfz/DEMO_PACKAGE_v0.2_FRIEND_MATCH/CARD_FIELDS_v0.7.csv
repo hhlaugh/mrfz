@@ -1,0 +1,56 @@
+field_name,applies_to,data_type,default_or_enum,purpose
+card_id,全部,string,唯一稳定ID,主键；平衡修改不得变更
+card_name_zh,全部,string,,中文显示名
+card_type,全部,enum,operator/tactic/support,卡牌大类
+rarity,全部,integer,1-6,收藏稀有度，不自动影响战斗属性
+cost,全部,integer,>=0,卡牌印刷费用
+hp,干员卡,integer,>0,卡牌定义的初始/最大HP
+atk,干员卡,integer,>=0,卡牌基础攻击力
+class,干员卡,enum,vanguard/guard/defender/sniper/caster/medic/support/specialist,干员职业
+attack_type,干员卡,enum,melee/ranged; special requires explicit target rule,普通攻击类型；special 未定义目标算法时不得执行普通自动攻击
+deploy_rule,干员卡,enum,front_only/front_or_back/back_only,部署位置限制；近战默认 front_only，远程默认 back_only，front_or_back 仅用于特种/特殊技能干员的前排例外（2026-11-03 修订）
+floating,干员卡,boolean,true/false,原生浮空词条；只允许后位部署
+taunt_scope,干员卡/效果,enum,none/same_lane/all_lanes,嘲讽范围
+normal_withdrawal_refund_ratio,干员卡,number,"0.20-0.50; fallback by cost: 1-2=0.50, 3-4=0.3333, 5-6=0.25, 7+=0.20",统一退款公式：floor(实际支付费用×有效比例)；测试卡可配置0.50，完整卡池可按卡牌覆写
+redeploy_cd_base,干员卡,integer,>=1,普通撤离基础CD；逐卡配置，不区分Demo/正式版规则
+rapid_withdrawal_cd_reduction,快速撤离卡,integer,default 1,快速撤离减少的CD，最低0
+max_sp,干员卡,integer,>=0,技力上限
+starting_sp,干员卡,integer,0..max_sp,起始SP；撤离后恢复此值
+sp_regen_per_turn,干员卡,integer,>=0; default 1,己方回合开始自然回复；冰冻时无效
+sp_gain_on_attacked,干员卡,integer,>=0,被有效攻击后获得SP；护盾全吸收仍可触发
+sp_gain_on_damaged,干员卡,integer,>=0,HP实际下降后获得SP
+sp_gain_on_kill,干员卡,integer,>=0,造成干员阵亡后获得SP
+active_skill_sp_cost,干员卡,integer/null,>=0/null,主动技能技力消耗
+active_skill_effect_json,干员卡,json object,白名单动作,主动技能机器可读效果
+effect_trigger,卡牌/技能,enum,turn_start/turn_end/on_play/on_deploy/on_attacked/on_damaged/on_damage_survive/on_lethal/on_death/on_ally_death/on_kill/on_heal/on_leave_field/combat_end/active/passive_free/passive_sp/reaction_sp/none,触发时机
+effect_json,卡牌/技能,json object,白名单动作,机器可读效果定义，不执行任意代码
+card_instance_id,卡实例,string,唯一ID,每个实体副本身份
+owner_id,卡实例,string,player_a/player_b,卡牌所有者
+controller_id,卡实例,string,player_a/player_b,当前控制者
+board_half,卡实例,enum,player_a/player_b,当前所在半区；普通撤离要求等于controller_id
+lane,卡实例,enum,left/center/right,当前路线
+position,卡实例,enum,front/back,当前部署位置
+current_hp,卡实例,integer,0..hp,当前HP；撤离重置为hp
+current_atk_modifiers,卡实例,array,[],临时攻击力修正；撤离清空
+current_sp,卡实例,integer,0..max_sp,当前SP；撤离重置为starting_sp
+shield,卡实例,integer,>=0,当前护盾；撤离清零
+statuses,卡实例,array,[],当前状态；撤离清空
+grounded_remaining_owner_turns,卡实例,integer,0+,临时落地剩余目标拥有者回合数
+floating_removed,卡实例,boolean,false,永久移除浮空的预留字段；当前版本不实现
+has_deployed_before,卡实例,boolean,true/false,是否曾经部署；撤离不清除
+redeploy_cd_remaining,卡实例,integer,0+,剩余需跳过的后续己方行动阶段数；撤离不清除
+current_deployment_paid_cost,卡实例,integer/null,>=0/null,当前这次部署实际支付费用；撤离退款后清空
+normal_withdrawal_eligible,派生值,boolean,runtime computed,根据控制者、半区、在场和禁止撤离状态实时计算
+blocks_normal_withdrawal,状态,boolean,stun/freeze=true; others configurable,该状态是否禁止普通撤离
+ignore_control_restriction,强制撤离效果,boolean,default false,是否允许撤离受控干员
+ignore_half_restriction,强制撤离效果,boolean,default false,是否允许从对方半区撤离己方干员
+withdrawal_refund_policy,强制撤离效果,enum,none/normal_ratio/full_paid_cost/fixed,效果型撤离退款方式
+reset_combat_state,撤离效果,boolean,default true,撤离后恢复卡牌初始战斗状态
+equipment_ids,卡实例,array,[],附着装备；撤离时解除并进入弃牌堆
+once_per_game_flags,卡实例,object,{},一次/每局标记；撤离不重置，除非卡牌明文规定
+max_trigger_depth,规则常量,integer,32,自动触发链安全阀，不限制玩家主动操作次数
+refund_ratio_by_cost,规则配置,function/table,1-2:0.50; 3-4:0.3333; 5-6:0.25; 7+:0.20,未设置单卡退款比例时使用的统一费用档位默认值
+redeploy_cd_applied_owner_turn_index,卡实例,integer,owner turn index,记录设置CD时的控制者回合序号，避免撤离所在回合错误递减
+cancel_attack,反应/效果,boolean,default false,是否明确取消已提交的攻击事件
+entered_battle_this_owner_turn,卡实例,boolean,false,本己方回合是否曾进入战场；撤离不重置，防止同回合重新部署后重复普通攻击
+

@@ -1,0 +1,40 @@
+﻿chinese_term,english_term,code_identifier,definition
+基本分,Base Points,base_points,玩家基地耐久；归零失败
+生命值,HP,hp/current_hp,干员最大/当前生命，不表示基地耐久
+攻击力,ATK,atk/current_atk,干员基础/当前攻击力
+费用,Cost,cost,卡牌印刷费用及玩家公共资源消耗
+实际支付部署费用,Paid Deploy Cost,current_deployment_paid_cost,最近一次部署实际支付的费用，撤离退款基数；退款后清空
+技力,Skill Points,current_sp,干员个人技能资源
+技力上限,Maximum SP,max_sp,干员技力上限
+起始技力,Starting SP,starting_sp,首次部署或撤离重置后的技力
+自然技力回复,SP Regeneration,sp_regen_per_turn,己方回合开始的技力回复量；冰冻时无效
+行动阶段,Action Phase,action,部署、打牌、主动技能和撤离操作阶段
+战斗阶段,Combat Phase,combat,当前回合玩家干员自动普通攻击阶段
+普通撤离,Normal Withdrawal,normal_withdrawal,不消耗手牌的基础撤离；受控制和半区限制
+快速撤离,Rapid Withdrawal,rapid_withdrawal,0费战术卡；全额退款、减少此次CD，并明确豁免控制/半区限制
+强制撤离,Forced Withdrawal,forced_withdrawal,由战术卡/效果执行，按字段决定控制/半区豁免与退款
+普通撤离退款比例,Normal Withdrawal Refund Ratio,normal_withdrawal_refund_ratio,卡牌数据参数；退款=floor(实际支付费用×比例)
+再部署冷却,Redeploy CD,redeploy_cd_remaining,该实体卡实例尚需跳过的后续己方行动阶段数
+基础再部署冷却,Base Redeploy CD,redeploy_cd_base,卡牌定义的普通撤离基础CD；普通撤离最低1
+嘲讽,Taunt,taunt_scope,提高合法攻击者对嘲讽目标的攻击优先级
+浮空,Floating,floating,后位专属原生词条；近战不能攻击，不拦截基本分
+落地,Grounded,grounded_remaining_owner_turns,暂时取消浮空，按后位地面单位处理
+眩晕,Stun,stun,禁止普通攻击/主动技能，失去拦截资格并禁止普通撤离
+冰冻,Freeze,freeze,禁止普通攻击/主动技能/事件型技能，封锁所有SP获取并禁止普通撤离
+护盾,Shield,shield,先于HP吸收伤害
+拦截资格,Interception Eligibility,intercept_eligible,根据位置、浮空、落地和控制状态派生
+所属半区,Board Half,board_half,当前干员所在的A/B半区
+控制者,Controller,controller_id,当前控制该干员的玩家
+所有者,Owner,owner_id,卡牌归属玩家
+卡牌实例ID,Card Instance ID,card_instance_id,每个实体卡副本唯一标识
+部署历史,Deployment History,has_deployed_before,该卡实例是否曾进入战场；撤离重置不清除
+部署触发,On Deploy,on_deploy,每次成功进入战场触发一次，首次部署和再部署均适用
+受击,Attacked,on_attacked,被一次有效攻击选中/命中；护盾全吸收仍属于受击
+受伤,Damaged,on_damaged,HP实际下降；护盾全吸收不属于受伤
+离场,Leave Field,on_leave_field,撤离/其他非阵亡方式离开战场
+阵亡,Death,on_death,HP归零且完成致死处理后离场
+疲劳,Fatigue,fatigue_count,每次牌库空抽造成递增基本分伤害
+普通撤离禁止标记,Blocks Normal Withdrawal,blocks_normal_withdrawal,状态是否禁止玩家执行普通撤离
+控制豁免,Ignore Control Restriction,ignore_control_restriction,强制撤离效果是否可移除受控单位
+半区豁免,Ignore Half Restriction,ignore_half_restriction,强制撤离效果是否可移除对方半区的己方单位
+战斗状态重置,Reset Combat State,reset_combat_state,撤离后恢复卡牌初始战斗属性，清临时状态和装备

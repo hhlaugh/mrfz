@@ -1,0 +1,33 @@
+{
+  "name": "three-lane-card-game-demo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "build:lib": "tsc -b && vite build --mode lib",
+    "preview": "vite preview",
+    "relay": "node relay-server/src/index.ts",
+    "relay:dev": "node --watch relay-server/src/index.ts",
+    "typecheck": "tsc -b --pretty",
+    "test": "vitest run",
+    "test:simulation": "vitest run src/game/simulation.test.ts --reporter=verbose",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "socket.io": "^4.8.4",
+    "socket.io-client": "^4.8.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^4.4.1",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.3",
+    "vitest": "^3.1.1"
+  }
+}
