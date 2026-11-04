@@ -6,14 +6,16 @@ interface PlayerBarProps {
   readonly state: GameState;
   readonly playerId: PlayerId;
   readonly isActive: boolean;
+  readonly roleLabel?: string;
 }
 
-export function PlayerBar({ state, playerId, isActive }: PlayerBarProps) {
+export function PlayerBar({ state, playerId, isActive, roleLabel }: PlayerBarProps) {
   const player = state.players[playerId];
   return (
-    <div className={`player-bar${isActive ? ' active' : ''}`}>
+    <div className={`player-bar${isActive ? ' active' : ''}${roleLabel?.includes('己方') ? ' player-bar-self' : ''}`}>
       <span className="player-name">
         {PLAYER_LABEL[playerId]}
+        {roleLabel && <span className={`player-role-badge ${roleLabel.includes('己方') ? 'self' : 'opponent'}`}>{roleLabel}</span>}
         {isActive && <span className="active-mark"> ◀ 行动中</span>}
       </span>
       <span className="player-stat">基本分 <b>{player.base_points}</b></span>

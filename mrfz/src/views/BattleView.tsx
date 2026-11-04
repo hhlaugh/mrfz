@@ -42,6 +42,10 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
   const isActionPhase = state.phase === 'action';
   const hasPending = state.phase === 'turn_start' && state.turn_start_prepared && state.pending_effect_choices.length > 0;
 
+  // 视角决定：玩家视角下自己始终是下方的玩家，对手在上方
+  const bottomPlayer: PlayerId = humanPlayer ?? 'player_a';
+  const topPlayer: PlayerId = bottomPlayer === 'player_a' ? 'player_b' : 'player_a';
+
   const [selection, setSelection] = useState<CardInstanceId | null>(null);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
@@ -190,10 +194,15 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
     const key = `${half}:${lane}:${position}`;
     const instance = boardMap.get(key);
     const isDeployTarget = half === actor && selectedDeployActions.some((action) => action.lane === lane && action.position === position);
+    const posName = position === 'front' ? '前排' : '后排';
     if (!instance) {
       return (
         <div key={key} className={`slot${isDeployTarget ? ' highlight-slot' : ''}`} onClick={() => onSlotClick(half, lane, position)}>
-          {isDeployTarget && <span className="slot-label">可部署</span>}
+          {isDeployTarget ? (
+            <span className="slot-label">可部署 ({posName})</span>
+          ) : (
+            <span className="slot-hint">{posName}</span>
+          )}
         </div>
       );
     }
@@ -257,8 +266,14 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
       )}
 
       <div className="player-bars">
-        {HALVES.map((playerId) => (
-          <PlayerBar key={playerId} state={state} playerId={playerId} isActive={playerId === actor} />
+        {[topPlayer, bottomPlayer].map((playerId) => (
+          <PlayerBar
+            key={playerId}
+            state={state}
+            playerId={playerId}
+            isActive={playerId === actor}
+            roleLabel={playerId === bottomPlayer ? '己方 · 下方' : '对手 · 上方'}
+          />
         ))}
       </div>
 
@@ -291,14 +306,25 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
           <div className="board">
             {LANES.map((lane) => (
               <div key={lane} className="lane">
-                <div className={`half half-top${actor === 'player_a' ? ' active-half' : ''}`}>
-                  {renderSlot('player_a', lane, 'back')}
-                  {renderSlot('player_a', lane, 'front')}
+                <div className="lane-header">
+                  <span className="lane-name">{LANE_LABEL[lane]}</span>
+                  <span className="lane-side-badge enemy">敌方战线 (上方)</span>
                 </div>
-                <div className="lane-divider">{LANE_LABEL[lane]}</div>
-                <div className={`half half-bottom${actor === 'player_b' ? ' active-half' : ''}`}>
-                  {renderSlot('player_b', lane, 'front')}
-                  {renderSlot('player_b', lane, 'back')}
+                <div className={`half half-top${actor === topPlayer ? ' active-half' : ''}`}>
+                  {renderSlot(topPlayer, lane, 'back')}
+                  {renderSlot(topPlayer, lane, 'front')}
+                </div>
+                <div className="lane-divider">
+                  <span className="divider-line" />
+                  <span className="divider-label">⚔️ {LANE_LABEL[lane]}交锋线</span>
+                  <span className="divider-line" />
+                </div>
+                <div className={`half half-bottom${actor === bottomPlayer ? ' active-half' : ''}`}>
+                  {renderSlot(bottomPlayer, lane, 'front')}
+                  {renderSlot(bottomPlayer, lane, 'back')}
+                </div>
+                <div className="lane-footer">
+                  <span className="lane-side-badge ally">己方战线 (下方)</span>
                 </div>
               </div>
             ))}
@@ -363,13 +389,19 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
           )}
 
           <div className="hands">
-            {HALVES.map((playerId) => {
-              const isOpponent = humanPlayer !== null && playerId !== humanPlayer;
+            {[topPlayer, bottomPlayer].map((playerId) => {
+              const isOpponent = humanPlayer !== null ? playerId !== humanPlayer : playerId !== bottomPlayer;
               return (
-                <div key={playerId} className={`hand-area${playerId === actor ? ' active' : ''}`}>
+                <div key={playerId} className={`hand-area${playerId === actor ? ' active' : ''}${playerId === bottomPlayer ? ' hand-self' : ' hand-opponent'}`}>
                   <div className="hand-label">
-                    {PLAYER_LABEL[playerId]} 手牌（{state.players[playerId].hand.length}）
-                    {playerId === actor && ' · 行动中'}
+                    <span className="hand-player-title">
+                      {PLAYER_LABEL[playerId]}
+                      <span className={`player-role-badge ${playerId === bottomPlayer ? 'self' : 'opponent'}`}>
+                        {playerId === bottomPlayer ? '己方（你）' : '对手'}
+                      </span>
+                    </span>
+                    <span className="hand-count">手牌（{state.players[playerId].hand.length}）</span>
+                    {playerId === actor && <span className="hand-active-status"> · 行动中</span>}
                   </div>
                   <div className="hand-cards">
                     {isOpponent ? (

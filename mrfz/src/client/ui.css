@@ -145,9 +145,20 @@ b { color: #fff; }
   background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
   padding: 8px 12px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
   font-size: 13px;
+  transition: all 0.2s;
 }
-.player-bar.active { border-color: var(--accent); }
-.player-name { font-weight: 700; }
+.player-bar.active { border-color: var(--accent); box-shadow: 0 0 8px rgba(79, 140, 255, 0.25); }
+.player-bar-self { border-bottom: 2px solid var(--good); }
+.player-name { font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.player-role-badge {
+  font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 6px; line-height: 1.4;
+}
+.player-role-badge.self {
+  background: rgba(76, 195, 138, 0.2); border: 1px solid var(--good); color: var(--good);
+}
+.player-role-badge.opponent {
+  background: rgba(239, 106, 106, 0.2); border: 1px solid var(--bad); color: var(--bad);
+}
 .active-mark { color: var(--accent); font-weight: 400; font-size: 12px; }
 .player-stat { color: var(--muted); }
 .player-stat.fatigue { color: var(--warn); }
@@ -161,29 +172,85 @@ b { color: #fff; }
 
 .battle-main { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 12px; align-items: start; }
 
-/* ---------- 棋盘 ---------- */
-.board-wrap { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-.board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.lane { display: flex; flex-direction: column; gap: 6px; }
-.half { display: flex; flex-direction: column; gap: 6px; padding: 6px; border-radius: 10px; border: 1px dashed transparent; }
-.half.active-half { border-color: var(--accent-soft); background: rgba(79, 140, 255, 0.05); }
-.half-top .slot:first-child, .half-top .unit:first-child { margin-bottom: 0; }
+/* ---------- 棋盘边界增强 ---------- */
+.board-wrap {
+  display: flex; flex-direction: column; gap: 10px; min-width: 0;
+  background: #11151f;
+  border: 2px solid #2e374d;
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.lane {
+  display: flex; flex-direction: column; gap: 8px;
+  background: rgba(24, 29, 42, 0.95);
+  border: 2px solid #333d54;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+.lane-header, .lane-footer {
+  display: flex; justify-content: space-between; align-items: center; padding: 2px 4px;
+}
+.lane-name { font-weight: 800; font-size: 13px; color: #fff; }
+.lane-side-badge {
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+}
+.lane-side-badge.enemy {
+  background: rgba(239, 106, 106, 0.15); border: 1px solid rgba(239, 106, 106, 0.4); color: #ff8e8e;
+}
+.lane-side-badge.ally {
+  background: rgba(76, 195, 138, 0.15); border: 1px solid rgba(76, 195, 138, 0.4); color: #5ce39f;
+}
+
+.half {
+  display: flex; flex-direction: column; gap: 8px; padding: 8px;
+  border-radius: 10px; transition: all 0.2s;
+}
+.half-top {
+  background: rgba(239, 106, 106, 0.04);
+  border: 1.5px dashed rgba(239, 106, 106, 0.35);
+}
+.half-bottom {
+  background: rgba(76, 195, 138, 0.04);
+  border: 1.5px dashed rgba(76, 195, 138, 0.4);
+}
+.half.active-half {
+  border-color: var(--accent);
+  background: rgba(79, 140, 255, 0.1);
+  box-shadow: 0 0 10px rgba(79, 140, 255, 0.25);
+}
+
 .lane-divider {
-  text-align: center; color: var(--muted); font-size: 12px;
-  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 2px 0;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin: 2px 0; padding: 4px 0;
+  background: linear-gradient(90deg, transparent, rgba(79, 140, 255, 0.15), transparent);
+}
+.divider-line { flex: 1; height: 1.5px; background: #3d4a66; }
+.divider-label {
+  font-size: 11px; font-weight: 700; color: #a4b6df; letter-spacing: 0.5px;
 }
 
 .slot {
-  min-height: 64px; border: 1px dashed var(--line); border-radius: 10px;
+  min-height: 68px; border: 1.5px dashed #3a4560; border-radius: 10px;
+  background: rgba(18, 22, 32, 0.65);
   display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; position: relative;
 }
-.slot-label { color: var(--accent); font-size: 12px; }
-.slot.highlight-slot { border-color: var(--accent); background: var(--accent-soft); cursor: pointer; }
+.slot:hover { border-color: #526388; background: rgba(24, 30, 44, 0.85); }
+.slot-hint { color: #5a6988; font-size: 11px; font-weight: 600; letter-spacing: 1px; }
+.slot.highlight-slot {
+  border: 2px solid var(--accent); background: var(--accent-soft);
+  box-shadow: 0 0 12px rgba(79, 140, 255, 0.4); cursor: pointer;
+}
+.slot-label { color: #fff; font-size: 12px; font-weight: 700; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); }
 
 .unit {
   border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2);
   padding: 8px; display: flex; flex-direction: column; gap: 6px; cursor: pointer;
-  min-height: 64px;
+  min-height: 68px;
 }
 .unit.highlight-target { border-color: var(--warn); box-shadow: 0 0 0 2px rgba(240, 180, 41, 0.35); }
 .unit.highlight-selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
@@ -214,9 +281,19 @@ b { color: #fff; }
 .action-strip-title { font-weight: 600; }
 
 .hands { display: flex; flex-direction: column; gap: 8px; }
-.hand-area { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
-.hand-area.active { border-color: var(--accent); }
-.hand-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+.hand-area {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px;
+  transition: all 0.2s;
+}
+.hand-area.active { border-color: var(--accent); box-shadow: 0 0 10px rgba(79, 140, 255, 0.2); }
+.hand-area.hand-self { border-left: 3px solid var(--good); background: rgba(29, 34, 48, 0.9); }
+.hand-area.hand-opponent { border-left: 3px solid var(--bad); opacity: 0.9; }
+.hand-label {
+  font-size: 12px; color: var(--muted); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.hand-player-title { font-weight: 700; color: #fff; display: flex; align-items: center; gap: 6px; }
+.hand-active-status { color: var(--accent); font-weight: 600; }
 
 /* ---------- 日志 ---------- */
 .log-side { position: sticky; top: 12px; }
