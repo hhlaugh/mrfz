@@ -2,10 +2,27 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
+import { createRelayServer } from './relay-server/src/index.ts';
+
 export default defineConfig(() => {
   return {
     base: './',
-    plugins: [react()],
+    plugins: [
+      react(),
+      {
+        name: 'integrated-relay-server',
+        configureServer(server) {
+          if (server.httpServer) {
+            try {
+              createRelayServer(server.httpServer, { origins: true });
+              console.log('[integrated-relay] relay server successfully attached to dev server');
+            } catch (err) {
+              console.error('[integrated-relay] failed to attach relay server:', err);
+            }
+          }
+        },
+      },
+    ],
     resolve: {
       alias: {
         '@': path.resolve(import.meta.dirname ?? '.', '.'),

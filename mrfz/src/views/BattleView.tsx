@@ -265,18 +265,6 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
         </div>
       )}
 
-      <div className="player-bars">
-        {[topPlayer, bottomPlayer].map((playerId) => (
-          <PlayerBar
-            key={playerId}
-            state={state}
-            playerId={playerId}
-            isActive={playerId === actor}
-            roleLabel={playerId === bottomPlayer ? '己方 · 下方' : '对手 · 上方'}
-          />
-        ))}
-      </div>
-
       {hasPending && (
         <div className="pending-banner">
           {state.pending_effect_choices.map((choice) => {
@@ -301,148 +289,176 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
         </div>
       )}
 
-      <div className="battle-main">
-        <div className="board-wrap">
-          <div className="board">
-            {LANES.map((lane) => (
-              <div key={lane} className="lane">
-                <div className="lane-header">
-                  <span className="lane-name">{LANE_LABEL[lane]}</span>
-                  <span className="lane-side-badge enemy">敌方战线 (上方)</span>
-                </div>
-                <div className={`half half-top${actor === topPlayer ? ' active-half' : ''}`}>
-                  {renderSlot(topPlayer, lane, 'back')}
-                  {renderSlot(topPlayer, lane, 'front')}
-                </div>
-                <div className="lane-divider">
-                  <span className="divider-line" />
-                  <span className="divider-label">⚔️ {LANE_LABEL[lane]}交锋线</span>
-                  <span className="divider-line" />
-                </div>
-                <div className={`half half-bottom${actor === bottomPlayer ? ' active-half' : ''}`}>
-                  {renderSlot(bottomPlayer, lane, 'front')}
-                  {renderSlot(bottomPlayer, lane, 'back')}
-                </div>
-                <div className="lane-footer">
-                  <span className="lane-side-badge ally">己方战线 (下方)</span>
-                </div>
+      {/* 辅助渲染独立手牌区 */}
+      {(() => {
+        const renderHandArea = (playerId: PlayerId) => {
+          const isOpponent = humanPlayer !== null ? playerId !== humanPlayer : playerId !== bottomPlayer;
+          const isSelf = playerId === bottomPlayer;
+          return (
+            <div key={playerId} className={`hand-area${playerId === actor ? ' active' : ''}${isSelf ? ' hand-self' : ' hand-opponent'}`}>
+              <div className="hand-label">
+                <span className="hand-player-title">
+                  {PLAYER_LABEL[playerId]}
+                  <span className={`player-role-badge ${isSelf ? 'self' : 'opponent'}`}>
+                    {isSelf ? '己方（你）' : '对手'}
+                  </span>
+                </span>
+                <span className="hand-count">手牌（{state.players[playerId].hand.length}）</span>
+                {playerId === actor && <span className="hand-active-status"> · 行动中</span>}
               </div>
-            ))}
-          </div>
-
-          {selectedInstance && selectedIsOwnBoardUnit && isActionPhase && !hasPending && canAct && (
-            <div className="action-strip">
-              <span className="action-strip-title">{selectedDefinition?.card_name_zh ?? '干员'}</span>
-              <button
-                className="btn"
-                disabled={!selectedUnitActions.canWithdraw}
-                onClick={() => {
-                  const action = legal.find(
-                    (candidate): candidate is Extract<GameAction, { type: 'withdraw_operator' }> =>
-                      candidate.type === 'withdraw_operator' && candidate.card_instance_id === selection,
-                  );
-                  if (action) dispatch(action);
-                }}
-              >
-                普通撤离
-              </button>
-              <button
-                className="btn"
-                disabled={!selectedUnitActions.canSkillDirect && selectedUnitActions.skillTargets.size === 0}
-                onClick={() => {
-                  const direct = legal.find(
-                    (candidate): candidate is SkillAction =>
-                      candidate.type === 'activate_skill' && candidate.card_instance_id === selection && candidate.target_instance_id === undefined,
-                  );
-                  if (direct) dispatch(direct);
-                }}
-              >
-                主动技能{selectedUnitActions.skillCost !== null ? `（SP ${selectedUnitActions.skillCost}）` : ''}
-              </button>
-              {!selectedUnitActions.canSkillDirect && selectedUnitActions.skillTargets.size > 0 && (
-                <span className="hint">点击高亮目标发动技能</span>
-              )}
-              {selectedUnitActions.canWithdraw && <span className="hint">普通撤离将按规则退款并进入再部署 CD</span>}
+              <div className="hand-cards">
+                {isOpponent ? (
+                  state.players[playerId].hand.map((id, index) => (
+                    <div key={id || index} className="card card-hidden">
+                      <div className="card-top">
+                        <span className="card-cost">?</span>
+                        <span className="card-name">未知手牌</span>
+                      </div>
+                      <div className="card-effect">对手手牌内容已对客户端隐蔽</div>
+                    </div>
+                  ))
+                ) : (
+                  state.players[playerId].hand.map((id) => (
+                    <CardView
+                      key={id}
+                      state={state}
+                      instanceId={id}
+                      selected={selection === id}
+                      interactive={isActionPhase && !hasPending && playerId === actor && canAct}
+                      onClick={() => onHandCardClick(id)}
+                    />
+                  ))
+                )}
+                {state.players[playerId].hand.length === 0 && <span className="empty-hint">（无手牌）</span>}
+              </div>
             </div>
-          )}
+          );
+        };
 
-          {selectedInstance && showHandDirectUse && directPlay && canAct && (
-            <div className="action-strip">
-              <span className="action-strip-title">{selectedDefinition?.card_name_zh ?? '卡牌'}</span>
-              <button
-                className="btn primary"
-                onClick={() => {
-                  const action = selectedPlayActions.find((candidate) => candidate.target_instance_id === undefined);
-                  if (action) dispatch(action);
-                }}
-              >
-                直接使用
-              </button>
-              {playTargets.size > 0 && <span className="hint">或点击高亮目标使用</span>}
-            </div>
-          )}
-          {selectedInstance && showHandDirectUse && !directPlay && playTargets.size > 0 && canAct && (
-            <div className="action-strip">
-              <span className="action-strip-title">{selectedDefinition?.card_name_zh ?? '卡牌'}</span>
-              <span className="hint">点击高亮目标使用</span>
-            </div>
-          )}
+        return (
+          <div className="battle-main">
+            <div className="board-wrap">
+              {/* 1. 敌方玩家区域（棋盘上方）：敌方状态条 + 敌方手牌 */}
+              <div className="player-zone enemy-zone">
+                <PlayerBar
+                  state={state}
+                  playerId={topPlayer}
+                  isActive={topPlayer === actor}
+                  roleLabel="对手 · 上方"
+                />
+                {renderHandArea(topPlayer)}
+              </div>
 
-          <div className="hands">
-            {[topPlayer, bottomPlayer].map((playerId) => {
-              const isOpponent = humanPlayer !== null ? playerId !== humanPlayer : playerId !== bottomPlayer;
-              return (
-                <div key={playerId} className={`hand-area${playerId === actor ? ' active' : ''}${playerId === bottomPlayer ? ' hand-self' : ' hand-opponent'}`}>
-                  <div className="hand-label">
-                    <span className="hand-player-title">
-                      {PLAYER_LABEL[playerId]}
-                      <span className={`player-role-badge ${playerId === bottomPlayer ? 'self' : 'opponent'}`}>
-                        {playerId === bottomPlayer ? '己方（你）' : '对手'}
-                      </span>
-                    </span>
-                    <span className="hand-count">手牌（{state.players[playerId].hand.length}）</span>
-                    {playerId === actor && <span className="hand-active-status"> · 行动中</span>}
+              {/* 2. 居中三路交锋棋盘 */}
+              <div className="board">
+                {LANES.map((lane) => (
+                  <div key={lane} className="lane">
+                    <div className="lane-header">
+                      <span className="lane-name">{LANE_LABEL[lane]}</span>
+                      <span className="lane-side-badge enemy">敌方战线 (上方)</span>
+                    </div>
+                    <div className={`half half-top${actor === topPlayer ? ' active-half' : ''}`}>
+                      {renderSlot(topPlayer, lane, 'back')}
+                      {renderSlot(topPlayer, lane, 'front')}
+                    </div>
+                    <div className="lane-divider">
+                      <span className="divider-line" />
+                      <span className="divider-label">⚔️ {LANE_LABEL[lane]}交锋线</span>
+                      <span className="divider-line" />
+                    </div>
+                    <div className={`half half-bottom${actor === bottomPlayer ? ' active-half' : ''}`}>
+                      {renderSlot(bottomPlayer, lane, 'front')}
+                      {renderSlot(bottomPlayer, lane, 'back')}
+                    </div>
+                    <div className="lane-footer">
+                      <span className="lane-side-badge ally">己方战线 (下方)</span>
+                    </div>
                   </div>
-                  <div className="hand-cards">
-                    {isOpponent ? (
-                      state.players[playerId].hand.map((id, index) => (
-                        <div key={id || index} className="card card-hidden">
-                          <div className="card-top">
-                            <span className="card-cost">?</span>
-                            <span className="card-name">未知手牌</span>
-                          </div>
-                          <div className="card-effect">对手手牌内容已对客户端隐蔽</div>
-                        </div>
-                      ))
-                    ) : (
-                      state.players[playerId].hand.map((id) => (
-                        <CardView
-                          key={id}
-                          state={state}
-                          instanceId={id}
-                          selected={selection === id}
-                          interactive={isActionPhase && !hasPending && playerId === actor && canAct}
-                          onClick={() => onHandCardClick(id)}
-                        />
-                      ))
-                    )}
-                    {state.players[playerId].hand.length === 0 && <span className="empty-hint">（无手牌）</span>}
-                  </div>
+                ))}
+              </div>
+
+              {/* 3. 选定单位与直接使用战术操作条 */}
+              {selectedInstance && selectedIsOwnBoardUnit && isActionPhase && !hasPending && canAct && (
+                <div className="action-strip">
+                  <span className="action-strip-title">{selectedDefinition?.card_name_zh ?? '干员'}</span>
+                  <button
+                    className="btn"
+                    disabled={!selectedUnitActions.canWithdraw}
+                    onClick={() => {
+                      const action = legal.find(
+                        (candidate): candidate is Extract<GameAction, { type: 'withdraw_operator' }> =>
+                          candidate.type === 'withdraw_operator' && candidate.card_instance_id === selection,
+                      );
+                      if (action) dispatch(action);
+                    }}
+                  >
+                    普通撤离
+                  </button>
+                  <button
+                    className="btn"
+                    disabled={!selectedUnitActions.canSkillDirect && selectedUnitActions.skillTargets.size === 0}
+                    onClick={() => {
+                      const direct = legal.find(
+                        (candidate): candidate is SkillAction =>
+                          candidate.type === 'activate_skill' && candidate.card_instance_id === selection && candidate.target_instance_id === undefined,
+                      );
+                      if (direct) dispatch(direct);
+                    }}
+                  >
+                    主动技能{selectedUnitActions.skillCost !== null ? `（SP ${selectedUnitActions.skillCost}）` : ''}
+                  </button>
+                  {!selectedUnitActions.canSkillDirect && selectedUnitActions.skillTargets.size > 0 && (
+                    <span className="hint">点击高亮目标发动技能</span>
+                  )}
+                  {selectedUnitActions.canWithdraw && <span className="hint">普通撤离将按规则退款并进入再部署 CD</span>}
                 </div>
-              );
-            })}
+              )}
+
+              {selectedInstance && showHandDirectUse && directPlay && canAct && (
+                <div className="action-strip">
+                  <span className="action-strip-title">{selectedDefinition?.card_name_zh ?? '卡牌'}</span>
+                  <button
+                    className="btn primary"
+                    onClick={() => {
+                      const action = selectedPlayActions.find((candidate) => candidate.target_instance_id === undefined);
+                      if (action) dispatch(action);
+                    }}
+                  >
+                    直接使用
+                  </button>
+                  {playTargets.size > 0 && <span className="hint">或点击高亮目标使用</span>}
+                </div>
+              )}
+              {selectedInstance && showHandDirectUse && !directPlay && playTargets.size > 0 && canAct && (
+                <div className="action-strip">
+                  <span className="action-strip-title">{selectedDefinition?.card_name_zh ?? '卡牌'}</span>
+                  <span className="hint">点击高亮目标使用</span>
+                </div>
+              )}
+
+              {/* 4. 己方玩家专属区域（棋盘下方，紧贴己方战线）：己方手牌 + 己方状态条 */}
+              <div className="player-zone ally-zone">
+                {renderHandArea(bottomPlayer)}
+                <PlayerBar
+                  state={state}
+                  playerId={bottomPlayer}
+                  isActive={bottomPlayer === actor}
+                  roleLabel="己方 · 下方"
+                />
+              </div>
+            </div>
+
+            <aside className="log-side">
+              <details open className="log-details">
+                <summary>战斗日志（{snapshot.logHistory.length}）</summary>
+                <LogView history={snapshot.logHistory} />
+              </details>
+            </aside>
           </div>
-        </div>
-
-        <aside className="log-side">
-          <details open className="log-details">
-            <summary>战斗日志（{snapshot.logHistory.length}）</summary>
-            <LogView history={snapshot.logHistory} />
-          </details>
-        </aside>
-      </div>
-
+        );
+      })()}
       {error && <div className="error-toast">{error}</div>}
     </div>
   );
 }
+

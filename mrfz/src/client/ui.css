@@ -233,8 +233,15 @@ b { color: #fff; }
   font-size: 11px; font-weight: 700; color: #a4b6df; letter-spacing: 0.5px;
 }
 
+.slot, .unit {
+  height: 116px;
+  min-height: 116px;
+  max-height: 116px;
+  box-sizing: border-box;
+}
+
 .slot {
-  min-height: 68px; border: 1.5px dashed #3a4560; border-radius: 10px;
+  border: 1.5px dashed #3a4560; border-radius: 10px;
   background: rgba(18, 22, 32, 0.65);
   display: flex; align-items: center; justify-content: center;
   transition: all 0.2s; position: relative;
@@ -249,14 +256,29 @@ b { color: #fff; }
 
 .unit {
   border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2);
-  padding: 8px; display: flex; flex-direction: column; gap: 6px; cursor: pointer;
-  min-height: 68px;
+  padding: 8px; display: flex; flex-direction: column; justify-content: space-between; gap: 4px; cursor: pointer;
+  overflow: hidden;
 }
 .unit.highlight-target { border-color: var(--warn); box-shadow: 0 0 0 2px rgba(240, 180, 41, 0.35); }
 .unit.highlight-selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
 .unit-icon {
   width: 28px; height: 28px; border-radius: 8px; background: var(--accent);
   display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff;
+}
+
+/* 玩家独立区域划分（敌我隔离） */
+.player-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.player-zone.enemy-zone {
+  border-bottom: 2px solid #283144;
+  padding-bottom: 8px;
+}
+.player-zone.ally-zone {
+  border-top: 2px solid #283144;
+  padding-top: 8px;
 }
 .unit-name { font-size: 13px; font-weight: 600; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 .unit-floating { color: var(--warn); font-size: 11px; }

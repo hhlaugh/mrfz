@@ -6,7 +6,14 @@ import { DEMO_CARDS, DEMO_DECKS } from './demoData';
 import type { CardInstanceId, DeckDefinition, GameAction, PlayerId } from '../game/types';
 import type { RoomStatePayload } from '../../relay-server/src/types';
 
-export const DEFAULT_RELAY_URL = 'http://localhost:8787';
+export function getInitialRelayUrl(): string {
+  if (typeof window !== 'undefined' && window.location && window.location.protocol.startsWith('http')) {
+    return window.location.origin;
+  }
+  return 'http://localhost:8787';
+}
+
+export const DEFAULT_RELAY_URL = getInitialRelayUrl();
 export const PROTOCOL_VERSION = 1;
 export const RULES_VERSION = '0.7';
 

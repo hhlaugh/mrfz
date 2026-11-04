@@ -127,11 +127,34 @@ export function RoomLobbyView({ controller, snapshot, onBackToTitle }: RoomLobby
                   placeholder="http://localhost:8787"
                 />
               </label>
-              <button className="btn small" onClick={() => controller.setServerUrl(serverUrl.trim())}>
-                更新并重连
-              </button>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', margin: '6px 0' }}>
+                <button
+                  type="button"
+                  className="btn small"
+                  onClick={() => {
+                    const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8787';
+                    setServerUrl(origin);
+                    controller.setServerUrl(origin);
+                  }}
+                >
+                  设为当前站点同源
+                </button>
+                <button
+                  type="button"
+                  className="btn small"
+                  onClick={() => {
+                    setServerUrl('http://localhost:8787');
+                    controller.setServerUrl('http://localhost:8787');
+                  }}
+                >
+                  设为本地独立端 (8787)
+                </button>
+                <button className="btn small primary" onClick={() => controller.setServerUrl(serverUrl.trim())}>
+                  应用并重连
+                </button>
+              </div>
               <p className="hint">
-                默认本机 <code>http://localhost:8787</code>。同局域网对战可填入房主局域网 IP（如 <code>http://192.168.x.x:8787</code>）。
+                开发服务器已内置集成中继服务（同源直连即可）。若运行了独立 <code>npm run relay</code> 服务，可切换为 <code>http://localhost:8787</code>。
               </p>
             </div>
           )}
