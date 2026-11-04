@@ -1,11 +1,24 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
+import {defineConfig} from 'vite';
 
-export default defineConfig(({ mode }) => {
-  if (mode === 'lib') {
-    // 阶段 1-5 使用的引擎库构建：`npm run build:lib` 仍可产出 dist/game-data.js。
-    return { plugins: [react()], build: { lib: { entry: 'src/index.ts', formats: ['es'], fileName: 'game-data' } } };
-  }
-  // 默认：本地对战 UI 应用构建（阶段 6）。
-  return { plugins: [react()] };
+export default defineConfig(() => {
+  return {
+    base: './',
+    plugins: [react()],
+    resolve: {
+      alias: {
+        '@': path.resolve(import.meta.dirname ?? '.', '.'),
+      },
+    },
+    server: {
+      port: 3000,
+      host: '0.0.0.0',
+      // HMR is disabled in AI Studio via DISABLE_HMR env var.
+      // Do not modify—file watching is disabled to prevent flickering during agent edits.
+      hmr: process.env.DISABLE_HMR !== 'true',
+      // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
+      watch: process.env.DISABLE_HMR === 'true' ? null : {},
+    },
+  };
 });

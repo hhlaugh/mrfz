@@ -100,9 +100,11 @@ export class OnlineMatchController {
   private pendingAcks = new Map<string, (ack: ActionAck) => void>();
 
   private readonly listeners = new Set<Listener>();
+  private cachedSnapshot: OnlineMatchSnapshot;
 
   constructor(serverUrl: string = DEFAULT_RELAY_URL) {
     this.serverUrl = serverUrl;
+    this.cachedSnapshot = this.computeSnapshot();
   }
 
   getServerUrl(): string {
@@ -123,24 +125,28 @@ export class OnlineMatchController {
     };
   };
 
-  getSnapshot = (): OnlineMatchSnapshot => ({
-    connected: this.connected,
-    serverUrl: this.serverUrl,
-    roomCode: this.roomCode,
-    seat: this.seat,
-    token: this.token,
-    roomState: this.roomState,
-    inGame: this.inGame,
-    matchId: this.matchId,
-    opponentConnected: this.opponentConnected,
-    pausedForGuest: this.pausedForGuest,
-    closedReason: this.closedReason,
-    errorMessage: this.errorMessage,
-    gameSnapshot: this.seat === 'host' ? (this.hostController?.getSnapshot() ?? null) : this.guestSnapshot,
-    latestPlayerView: this.latestPlayerView,
-    hostDeckId: this.hostDeckId,
-    guestDeckId: this.guestDeckId,
-  });
+  private computeSnapshot(): OnlineMatchSnapshot {
+    return {
+      connected: this.connected,
+      serverUrl: this.serverUrl,
+      roomCode: this.roomCode,
+      seat: this.seat,
+      token: this.token,
+      roomState: this.roomState,
+      inGame: this.inGame,
+      matchId: this.matchId,
+      opponentConnected: this.opponentConnected,
+      pausedForGuest: this.pausedForGuest,
+      closedReason: this.closedReason,
+      errorMessage: this.errorMessage,
+      gameSnapshot: this.seat === 'host' ? (this.hostController?.getSnapshot() ?? null) : this.guestSnapshot,
+      latestPlayerView: this.latestPlayerView,
+      hostDeckId: this.hostDeckId,
+      guestDeckId: this.guestDeckId,
+    };
+  }
+
+  getSnapshot = (): OnlineMatchSnapshot => this.cachedSnapshot;
 
   clearError(): void {
     this.errorMessage = null;
@@ -148,6 +154,7 @@ export class OnlineMatchController {
   }
 
   private publish(): void {
+    this.cachedSnapshot = this.computeSnapshot();
     for (const listener of this.listeners) listener();
   }
 
