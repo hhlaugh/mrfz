@@ -1,0 +1,6 @@
+{
+  "name": "明日方舟卡牌对战 Demo",
+  "description": "明日方舟主题卡牌策略对战游戏，支持单人人机、本地双人热座及 WebRTC P2P 免服好友联机对战。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
