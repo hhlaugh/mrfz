@@ -1,0 +1,43 @@
+﻿field_name,data_type,description_zh,allowed_values_or_notes
+card_id,string,唯一且稳定的卡牌 ID,不得修改；沿用旧版 ID
+card_name_zh,string,卡牌中文名称,
+card_type,enum,卡牌类型,operator
+rarity,integer,稀有度星级,沿用原作星级
+rarity_label,string,稀有度展示文本,例如 6星
+rarity_basis,string,稀有度依据,原作干员星级
+source_star,integer,原作星级,
+class,enum,职业代码,vanguard/guard/defender/sniper/caster/medic/supporter/specialist
+cost,integer,卡面印刷费用,不能与SP费用或实际支付费用混用
+atk,integer,基础攻击力,运行时可派生 current_atk
+hp,integer,基础生命值,运行时可派生 current_hp
+attack_type,enum,普通攻击类型,melee/ranged
+deploy_rule,enum,部署位置限制,front_only/front_or_back/back_only
+redeploy_cd_cost_baseline,integer,按费用档位生成的CD基值,仅供配置追溯
+redeploy_cd_class_modifier,integer,职业CD修正,仅供配置追溯
+redeploy_cd_base,integer,最终再部署CD,运行时直接使用；不可再次叠职业修正
+normal_withdrawal_refund_ratio,number,普通撤离退款比例,基于实际支付费用向下取整
+max_sp,integer,SP上限,默认5
+starting_sp,integer,初始SP,默认0
+sp_regen_per_turn,integer,每个己方回合开始自然回复SP,冻结时所有SP获取封锁
+sp_gain_on_attacked,integer,受击回复SP,护盾完全吸收仍算受击
+sp_gain_on_damaged,integer,HP实际减少回复SP,护盾完全吸收不触发
+sp_gain_on_kill,integer,击杀回复SP,默认1
+taunt_scope,enum,嘲讽作用范围,none/same_lane
+floating,boolean,本体原生浮空属性,原生浮空仅允许后位
+target_scope,enum,普通攻击目标范围,same_lane_default/same_lane_backline/other skill-defined scope
+target_priority,enum,合法目标内的选择优先级,default/front_first/back_first/lowest_current_hp/highest_current_hp/highest_max_hp
+can_target_floating,boolean,是否能攻击浮空目标,远程默认true，近战false
+ignore_taunt,boolean,是否忽略嘲讽,
+ignore_front_interception,boolean,是否越过前排拦截选择后排,
+skills_json,json array,技能定义数组,包含skill_type/trigger/sp_cost/actions/condition/limit等
+summon_tokens_json,json array,召唤物数据,每个token需有独立token_id和卡位/攻击/生命/浮空定义
+rules_text_zh,string,卡牌展示技能文本,必须与skills_json语义一致
+synergy_tags,string,构筑联动标签,分号分隔
+deck_copy_limit,integer,牌组同名卡数量上限,
+field_same_name_limit,integer,场上同名单位上限,
+pack_enabled,boolean,是否进入抽卡池,不等于是否已实现
+playable_enabled,boolean,当前是否可进入对局,可与pack_enabled不同
+implementation_phase,enum,实现阶段,MVP/V1.0
+balance_note,string,平衡设计备注,
+balance_status,enum,平衡状态,待模拟测试
+revision_note,string,本次修订说明,

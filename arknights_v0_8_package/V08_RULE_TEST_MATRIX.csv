@@ -1,0 +1,26 @@
+﻿test_id,system,scenario,expected_result,priority
+BOARD-001,BoardProfile,标准棋盘,standard_3x1x1成功加载，双方各3路前后各1格,P0
+BOARD-002,BoardProfile,非对称路数,4路对2路按route_groups正确映射,P0
+BOARD-003,BoardProfile,卡位上限,单路每排>4或每方总格>24拒绝,P0
+ORDER-001,行动顺序,同一路多前排,front slot1先于slot2行动,P0
+ORDER-002,行动顺序,跨路线排序,lane_order低的路先行动,P0
+TARGET-001,普通攻击,多个前排地面单位,slot1优先于slot2,P0
+TARGET-002,嘲讽,多个嘲讽目标,嘲讽优先；同排slot1优先,P0
+TARGET-003,嘲讽+沉默,嘲讽来源被沉默,嘲讽压制，单位仍按普通地面卡位参与排序,P0
+TARGET-004,route_group,多路连接同一守方路,一名攻击者只攻击一次，不重复攻击,P0
+FLOAT-001,浮空,远程/近战目标,近战不可选浮空，远程在无地面拦截时优先选浮空,P0
+FLOAT-002,浮空+沉默,浮空来源被沉默,浮空失效，按后排地面单位处理；沉默结束恢复,P0
+SILENCE-001,沉默,普通攻击,沉默单位仍可普攻,P0
+SILENCE-002,沉默,SP获取,自然/受击/受伤/击杀/外部SP仍获得,P0
+SILENCE-003,沉默,技能压制,active/passive/reaction/on_deploy/attack/continuous均压制,P0
+SILENCE-004,沉默,已结算状态,不清除护盾/减速/眩晕等已存在状态,P1
+SILENCE-005,沉默,持续效果恢复,结束后恢复未过期永续效果，不重复触发部署,P0
+FREEZE-001,冰冻,SP获取,所有来源SP均封锁，不补发,P0
+FREEZE-002,冰冻,持续光环,未配置freeze压制的光环仍保留,P1
+AOE-001,范围技能,目标快照,不新增后来进入范围的目标，不补位,P0
+AOE-002,范围技能,即时结算,每个目标伤害/死亡后再处理下一目标,P0
+HEAL-001,单体治疗,目标优先级,最低HP比例优先，平局用卡位顺序,P0
+HEAL-002,单体治疗,无合法目标,不支付SP、不触发技能后续动作,P0
+SIEGE-001,攻防胜负,完整轮次,每轮双方各完成一个玩家回合,P0
+SIEGE-002,攻防胜负,守方存活到期,round_limit后守方基地存活则守方胜,P0
+NET-001,联机,棋盘同步,双方BoardProfile规范化hash一致才可开局,P0

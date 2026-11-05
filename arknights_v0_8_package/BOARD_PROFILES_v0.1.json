@@ -1,0 +1,493 @@
+[
+  {
+    "schema_version": "0.1",
+    "board_id": "compact_2x1x1",
+    "display_name": "紧凑棋盘：2路前1后1",
+    "mode": "duel",
+    "sides": {
+      "p1": {
+        "side_label": "玩家1",
+        "base_hp": 20,
+        "lanes": [
+          {
+            "lane_id": "L1",
+            "lane_order": 1,
+            "front_slots": 1,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L2",
+            "lane_order": 2,
+            "front_slots": 1,
+            "back_slots": 1
+          }
+        ]
+      },
+      "p2": {
+        "side_label": "玩家2",
+        "base_hp": 20,
+        "lanes": [
+          {
+            "lane_id": "L1",
+            "lane_order": 1,
+            "front_slots": 1,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L2",
+            "lane_order": 2,
+            "front_slots": 1,
+            "back_slots": 1
+          }
+        ]
+      }
+    },
+    "route_groups": [
+      {
+        "route_group_id": "route_1",
+        "side_lanes": {
+          "p1": [
+            "L1"
+          ],
+          "p2": [
+            "L1"
+          ]
+        }
+      },
+      {
+        "route_group_id": "route_2",
+        "side_lanes": {
+          "p1": [
+            "L2"
+          ],
+          "p2": [
+            "L2"
+          ]
+        }
+      }
+    ],
+    "victory": {
+      "first_player": "random",
+      "attacker_side": null,
+      "defender_side": null,
+      "round_limit": null
+    },
+    "ui": {
+      "editable": true
+    }
+  },
+  {
+    "schema_version": "0.1",
+    "board_id": "standard_3x1x1",
+    "display_name": "标准棋盘：3路前1后1",
+    "mode": "duel",
+    "sides": {
+      "p1": {
+        "side_label": "玩家1",
+        "base_hp": 20,
+        "lanes": [
+          {
+            "lane_id": "L1",
+            "lane_order": 1,
+            "front_slots": 1,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L2",
+            "lane_order": 2,
+            "front_slots": 1,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L3",
+            "lane_order": 3,
+            "front_slots": 1,
+            "back_slots": 1
+          }
+        ]
+      },
+      "p2": {
+        "side_label": "玩家2",
+        "base_hp": 20,
+        "lanes": [
+          {
+            "lane_id": "L1",
+            "lane_order": 1,
+            "front_slots": 1,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L2",
+            "lane_order": 2,
+            "front_slots": 1,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L3",
+            "lane_order": 3,
+            "front_slots": 1,
+            "back_slots": 1
+          }
+        ]
+      }
+    },
+    "route_groups": [
+      {
+        "route_group_id": "route_1",
+        "side_lanes": {
+          "p1": [
+            "L1"
+          ],
+          "p2": [
+            "L1"
+          ]
+        }
+      },
+      {
+        "route_group_id": "route_2",
+        "side_lanes": {
+          "p1": [
+            "L2"
+          ],
+          "p2": [
+            "L2"
+          ]
+        }
+      },
+      {
+        "route_group_id": "route_3",
+        "side_lanes": {
+          "p1": [
+            "L3"
+          ],
+          "p2": [
+            "L3"
+          ]
+        }
+      }
+    ],
+    "victory": {
+      "first_player": "random",
+      "attacker_side": null,
+      "defender_side": null,
+      "round_limit": null
+    },
+    "ui": {
+      "editable": true
+    }
+  },
+  {
+    "schema_version": "0.1",
+    "board_id": "wide_3x2x1",
+    "display_name": "宽幅棋盘：3路前2后1",
+    "mode": "duel",
+    "sides": {
+      "p1": {
+        "side_label": "玩家1",
+        "base_hp": 20,
+        "lanes": [
+          {
+            "lane_id": "L1",
+            "lane_order": 1,
+            "front_slots": 2,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L2",
+            "lane_order": 2,
+            "front_slots": 2,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L3",
+            "lane_order": 3,
+            "front_slots": 2,
+            "back_slots": 1
+          }
+        ]
+      },
+      "p2": {
+        "side_label": "玩家2",
+        "base_hp": 20,
+        "lanes": [
+          {
+            "lane_id": "L1",
+            "lane_order": 1,
+            "front_slots": 2,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L2",
+            "lane_order": 2,
+            "front_slots": 2,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L3",
+            "lane_order": 3,
+            "front_slots": 2,
+            "back_slots": 1
+          }
+        ]
+      }
+    },
+    "route_groups": [
+      {
+        "route_group_id": "route_1",
+        "side_lanes": {
+          "p1": [
+            "L1"
+          ],
+          "p2": [
+            "L1"
+          ]
+        }
+      },
+      {
+        "route_group_id": "route_2",
+        "side_lanes": {
+          "p1": [
+            "L2"
+          ],
+          "p2": [
+            "L2"
+          ]
+        }
+      },
+      {
+        "route_group_id": "route_3",
+        "side_lanes": {
+          "p1": [
+            "L3"
+          ],
+          "p2": [
+            "L3"
+          ]
+        }
+      }
+    ],
+    "victory": {
+      "first_player": "random",
+      "attacker_side": null,
+      "defender_side": null,
+      "round_limit": null
+    },
+    "ui": {
+      "editable": true
+    }
+  },
+  {
+    "schema_version": "0.1",
+    "board_id": "extended_4x2x1",
+    "display_name": "扩展棋盘：4路前2后1",
+    "mode": "duel",
+    "sides": {
+      "p1": {
+        "side_label": "玩家1",
+        "base_hp": 20,
+        "lanes": [
+          {
+            "lane_id": "L1",
+            "lane_order": 1,
+            "front_slots": 2,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L2",
+            "lane_order": 2,
+            "front_slots": 2,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L3",
+            "lane_order": 3,
+            "front_slots": 2,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L4",
+            "lane_order": 4,
+            "front_slots": 2,
+            "back_slots": 1
+          }
+        ]
+      },
+      "p2": {
+        "side_label": "玩家2",
+        "base_hp": 20,
+        "lanes": [
+          {
+            "lane_id": "L1",
+            "lane_order": 1,
+            "front_slots": 2,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L2",
+            "lane_order": 2,
+            "front_slots": 2,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L3",
+            "lane_order": 3,
+            "front_slots": 2,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "L4",
+            "lane_order": 4,
+            "front_slots": 2,
+            "back_slots": 1
+          }
+        ]
+      }
+    },
+    "route_groups": [
+      {
+        "route_group_id": "route_1",
+        "side_lanes": {
+          "p1": [
+            "L1"
+          ],
+          "p2": [
+            "L1"
+          ]
+        }
+      },
+      {
+        "route_group_id": "route_2",
+        "side_lanes": {
+          "p1": [
+            "L2"
+          ],
+          "p2": [
+            "L2"
+          ]
+        }
+      },
+      {
+        "route_group_id": "route_3",
+        "side_lanes": {
+          "p1": [
+            "L3"
+          ],
+          "p2": [
+            "L3"
+          ]
+        }
+      },
+      {
+        "route_group_id": "route_4",
+        "side_lanes": {
+          "p1": [
+            "L4"
+          ],
+          "p2": [
+            "L4"
+          ]
+        }
+      }
+    ],
+    "victory": {
+      "first_player": "random",
+      "attacker_side": null,
+      "defender_side": null,
+      "round_limit": null
+    },
+    "ui": {
+      "editable": true
+    }
+  },
+  {
+    "schema_version": "0.1",
+    "board_id": "custom_siege_4v2",
+    "display_name": "DIY攻防示例：攻4路守2路",
+    "mode": "siege",
+    "sides": {
+      "p1": {
+        "side_label": "攻方",
+        "base_hp": 20,
+        "lanes": [
+          {
+            "lane_id": "A1",
+            "lane_order": 1,
+            "front_slots": 2,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "A2",
+            "lane_order": 2,
+            "front_slots": 2,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "A3",
+            "lane_order": 3,
+            "front_slots": 2,
+            "back_slots": 1
+          },
+          {
+            "lane_id": "A4",
+            "lane_order": 4,
+            "front_slots": 2,
+            "back_slots": 1
+          }
+        ]
+      },
+      "p2": {
+        "side_label": "守方",
+        "base_hp": 30,
+        "lanes": [
+          {
+            "lane_id": "D1",
+            "lane_order": 1,
+            "front_slots": 3,
+            "back_slots": 2
+          },
+          {
+            "lane_id": "D2",
+            "lane_order": 2,
+            "front_slots": 3,
+            "back_slots": 2
+          }
+        ]
+      }
+    },
+    "route_groups": [
+      {
+        "route_group_id": "north",
+        "side_lanes": {
+          "p1": [
+            "A1",
+            "A2"
+          ],
+          "p2": [
+            "D1"
+          ]
+        }
+      },
+      {
+        "route_group_id": "south",
+        "side_lanes": {
+          "p1": [
+            "A3",
+            "A4"
+          ],
+          "p2": [
+            "D2"
+          ]
+        }
+      }
+    ],
+    "victory": {
+      "first_player": "p1",
+      "attacker_side": "p1",
+      "defender_side": "p2",
+      "round_limit": 10
+    },
+    "ui": {
+      "editable": true
+    }
+  }
+]
