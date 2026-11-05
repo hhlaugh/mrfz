@@ -46,6 +46,10 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
 const container = document.getElementById('root');
 if (!container) throw new Error('找不到 #root 挂载点。');
+if (typeof window !== 'undefined') {
+  (window as any).__MRFZ_LOADED__ = true;
+}
+
 createRoot(container).render(
   <ErrorBoundary>
     <App />
