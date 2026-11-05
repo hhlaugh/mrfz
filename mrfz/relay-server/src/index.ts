@@ -2,7 +2,7 @@ import { createServer, type Server as HttpServer } from 'node:http';
 import { pathToFileURL } from 'node:url';
 import { Server, type Socket } from 'socket.io';
 import { isActionRequest, isActionAck } from '../../src/client/protocol.ts';
-import { RoomManager } from './roomManager.ts';
+import { RoomManager, roomStatePayload } from './roomManager.ts';
 import { DEFAULT_RELAY_CONFIG, PROTOCOL_VERSION, RULES_VERSION } from './types.ts';
 import type { RelayConfig, RelayErrorPayload } from './types.ts';
 
@@ -120,33 +120,60 @@ export function createRelayServer(httpServer?: HttpServer, overrides: Partial<Re
       }
       socket.join(result.value.code);
       log(`room created ${result.value.code}`);
-      socket.emit('room:created', { code: result.value.code, seat: 'host', token: result.value.token, protocolVersion: PROTOCOL_VERSION, rulesVersion: RULES_VERSION });
+      const state = roomStatePayload(result.value.room);
+      socket.emit('room:created', {
+        code: result.value.code,
+        seat: 'host',
+        token: result.value.token,
+        protocolVersion: PROTOCOL_VERSION,
+        rulesVersion: RULES_VERSION,
+        roomState: state,
+      });
+      socket.emit('room:state', state);
     });
 
     handle('room:join', (payload) => {
       const scoped = requireRoom(payload);
       if (!scoped) return;
+      socket.join(scoped.code);
       const result = manager.joinRoom(socket.id, scoped.code, { protocolVersion: scoped.body.protocolVersion ?? PROTOCOL_VERSION, rulesVersion: scoped.body.rulesVersion ?? RULES_VERSION });
       if (!result.ok) {
+        socket.leave(scoped.code);
         reject(result.error, result.message);
         return;
       }
-      socket.join(result.value.room.code);
       log(`room joined ${result.value.room.code}`);
-      socket.emit('room:joined', { code: result.value.room.code, seat: 'guest', token: result.value.token, reconnected: false });
+      const state = roomStatePayload(result.value.room);
+      socket.emit('room:joined', {
+        code: result.value.room.code,
+        seat: 'guest',
+        token: result.value.token,
+        reconnected: false,
+        roomState: state,
+      });
+      socket.emit('room:state', state);
     });
 
     handle('room:rejoin', (payload) => {
       const scoped = requireRoom(payload);
       if (!scoped) return;
+      socket.join(scoped.code);
       const result = manager.rejoin(socket.id, scoped.code, scoped.body.token);
       if (!result.ok) {
+        socket.leave(scoped.code);
         reject(result.error, result.message);
         return;
       }
-      socket.join(result.value.room.code);
       log(`room rejoined ${result.value.room.code} seat=${result.value.seat}`);
-      socket.emit('room:joined', { code: result.value.room.code, seat: result.value.seat, reconnected: result.value.reconnected, token: scoped.body.token });
+      const state = roomStatePayload(result.value.room);
+      socket.emit('room:joined', {
+        code: result.value.room.code,
+        seat: result.value.seat,
+        reconnected: result.value.reconnected,
+        token: scoped.body.token,
+        roomState: state,
+      });
+      socket.emit('room:state', state);
     });
 
     handle('room:selectDeck', (payload) => {

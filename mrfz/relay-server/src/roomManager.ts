@@ -117,8 +117,10 @@ export class RoomManager {
     return info && info.connected ? info.connId : null;
   }
 
-  createRoom(connId: string, versions: unknown): Result<{ code: string; token: string }> {
-    if (this.seats.has(connId)) return fail('ALREADY_SEATED', '该连接已有座位。');
+  createRoom(connId: string, versions: unknown): Result<{ code: string; token: string; room: Room }> {
+    if (this.seats.has(connId)) {
+      this.leave(connId);
+    }
     if (!isRoomVersions(versions)) return fail('INVALID_PAYLOAD', '版本信息不合法。');
     const now = this.now();
     const room: Room = {
@@ -134,13 +136,17 @@ export class RoomManager {
       createdAt: now,
       lastActivityAt: now,
     };
+    room.host.deckId = 'demo-control';
     this.rooms.set(room.code, room);
     this.seats.set(connId, { code: room.code, seat: 'host' });
-    return { ok: true, value: { code: room.code, token: room.host.token } };
+    this.emit({ roomCode: room.code, seat: 'all', event: 'room:state', payload: roomStatePayload(room) });
+    return { ok: true, value: { code: room.code, token: room.host.token, room } };
   }
 
   joinRoom(connId: string, code: string, versions: unknown): Result<{ room: Room; token: string }> {
-    if (this.seats.has(connId)) return fail('ALREADY_SEATED', '该连接已有座位。');
+    if (this.seats.has(connId)) {
+      this.leave(connId);
+    }
     const room = this.rooms.get(code);
     if (!room || room.closed) return fail('ROOM_NOT_FOUND', '房间不存在或已过期。');
     if (room.started) return fail('ROOM_STARTED', '对局已开始，无法再加入。');
@@ -150,6 +156,7 @@ export class RoomManager {
       return fail('VERSION_MISMATCH', '协议或规则版本不兼容，请刷新到相同版本。');
     }
     room.guest = seatInfo(newToken(), connId);
+    room.guest.deckId = 'demo-aggro';
     this.seats.set(connId, { code: room.code, seat: 'guest' });
     room.lastActivityAt = this.now();
     this.emit({ roomCode: room.code, seat: 'all', event: 'room:state', payload: roomStatePayload(room) });

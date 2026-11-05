@@ -38,7 +38,7 @@ export const DEFAULT_RELAY_CONFIG: RelayConfig = {
   maxPayloadBytes: 32_768,
   maxMessagesPerWindow: 40,
   rateWindowMs: 5_000,
-  origins: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  origins: true,
 };
 
 export type RelayErrorCode =

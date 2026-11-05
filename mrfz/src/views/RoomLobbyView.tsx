@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { OnlineMatchController, OnlineMatchSnapshot } from '../client/onlineMatchController';
 import { DEMO_DECKS } from '../client/demoData';
 
@@ -13,6 +13,17 @@ export function RoomLobbyView({ controller, snapshot, onBackToTitle }: RoomLobby
   const [serverUrl, setServerUrl] = useState(controller.getServerUrl());
   const [showServerConfig, setShowServerConfig] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isJoining, setIsJoining] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+
+  const isGitHubPages = typeof window !== 'undefined' && window.location.hostname.endsWith('github.io');
+
+  useEffect(() => {
+    if (snapshot.errorMessage || snapshot.roomCode) {
+      setIsJoining(false);
+      setIsCreating(false);
+    }
+  }, [snapshot.errorMessage, snapshot.roomCode]);
 
   const roomState = snapshot.roomState;
   const isHost = snapshot.seat === 'host';
@@ -37,6 +48,10 @@ export function RoomLobbyView({ controller, snapshot, onBackToTitle }: RoomLobby
     controller.setReady(!myReady);
   };
 
+  useEffect(() => {
+    controller.connect();
+  }, [controller]);
+
   const handleStart = () => {
     controller.startMatch();
   };
@@ -45,12 +60,43 @@ export function RoomLobbyView({ controller, snapshot, onBackToTitle }: RoomLobby
     controller.leaveRoom();
   };
 
+  const handleCreate = () => {
+    setIsCreating(true);
+    controller.createRoom();
+    setTimeout(() => setIsCreating(false), 8000);
+  };
+
+  const handleJoin = () => {
+    const code = inputCode.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+    if (code.length !== 8) {
+      controller.setError(`房间码必须为 8 位字符（当前已输入 ${code.length} 位）。`);
+      return;
+    }
+    controller.clearError();
+    setIsJoining(true);
+    controller.joinRoom(code);
+    setTimeout(() => setIsJoining(false), 7000);
+  };
+
   // 1. 未进入房间视图：创建房间 或 输入房间码加入
   if (!inRoom) {
     return (
       <div className="room-lobby">
         <h1>好友联机对战</h1>
         <p className="subtitle">基于 Node.js + Socket.IO 中继服务 · 房主权威架构</p>
+
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '13px', margin: '4px 0 14px', background: 'rgba(255,255,255,0.05)', padding: '6px 12px', borderRadius: '8px' }}>
+          <span style={{ width: 10, height: 10, borderRadius: '50%', background: snapshot.connected ? '#48bb78' : '#e53e3e' }} />
+          <span>中继服务：{snapshot.connected ? '🟢 已连接' : '🔴 未连接（请确认中继已启动）'}</span>
+          <span style={{ color: '#718096', fontSize: '11px' }}>({snapshot.serverUrl})</span>
+        </div>
+
+        {isGitHubPages && (
+          <div className="alert-box warn" style={{ textAlign: 'left', lineHeight: 1.5 }}>
+            <b>💡 GitHub Pages 环境提示：</b>
+            当前页面运行在 GitHub Pages（静态托管无法提供 WebSocket 实时服务）。联机时双方需连接相同的中继服务端（例如本地终端执行 <code>npm run relay</code> 并使用 <code>http://localhost:8787</code>，或在下方“高级设置”填入公网中继端地址）。
+          </div>
+        )}
 
         {snapshot.closedReason && (
           <div className="alert-box warn">
@@ -78,8 +124,8 @@ export function RoomLobbyView({ controller, snapshot, onBackToTitle }: RoomLobby
           <div className="room-action-block">
             <h2>创建新房间</h2>
             <p className="note">作为房主创建房间码，并邀请好友加入对战。</p>
-            <button className="btn primary big" onClick={() => controller.createRoom()}>
-              创建房间
+            <button className="btn primary big" disabled={isCreating} onClick={handleCreate}>
+              {isCreating ? '正在创建...' : '创建房间'}
             </button>
           </div>
 
@@ -91,22 +137,21 @@ export function RoomLobbyView({ controller, snapshot, onBackToTitle }: RoomLobby
             <div className="room-code-input-row">
               <input
                 type="text"
-                maxLength={8}
                 placeholder="例如 ABCD2345"
                 value={inputCode}
-                onChange={(e) => setInputCode(e.target.value.toUpperCase())}
+                onChange={(e) => setInputCode(e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 8))}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && inputCode.trim().length === 8) {
-                    controller.joinRoom(inputCode);
+                  if (e.key === 'Enter' && !isJoining) {
+                    handleJoin();
                   }
                 }}
               />
               <button
                 className="btn primary"
-                disabled={inputCode.trim().length !== 8}
-                onClick={() => controller.joinRoom(inputCode)}
+                disabled={isJoining}
+                onClick={handleJoin}
               >
-                加入
+                {isJoining ? '加入中...' : '加入'}
               </button>
             </div>
           </div>

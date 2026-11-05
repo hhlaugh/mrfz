@@ -8,6 +8,9 @@ import type { RoomStatePayload } from '../../relay-server/src/types';
 
 export function getInitialRelayUrl(): string {
   if (typeof window !== 'undefined' && window.location && window.location.protocol.startsWith('http')) {
+    if (window.location.hostname.endsWith('github.io')) {
+      return 'http://localhost:8787';
+    }
     return window.location.origin;
   }
   return 'http://localhost:8787';
@@ -160,6 +163,11 @@ export class OnlineMatchController {
     this.publish();
   }
 
+  setError(message: string): void {
+    this.errorMessage = message;
+    this.publish();
+  }
+
   private publish(): void {
     this.cachedSnapshot = this.computeSnapshot();
     for (const listener of this.listeners) listener();
@@ -203,20 +211,32 @@ export class OnlineMatchController {
       this.publish();
     });
 
-    socket.on('room:created', (payload: { code: string; token: string; seat: OnlineRole }) => {
+    socket.on('room:created', (payload: { code: string; token: string; seat: OnlineRole; roomState?: RoomStatePayload }) => {
       this.roomCode = payload.code;
       this.token = payload.token;
       this.seat = 'host';
+      if (payload.roomState) {
+        this.roomState = payload.roomState;
+      }
       this.closedReason = null;
       this.errorMessage = null;
       saveSession({ roomCode: payload.code, token: payload.token, seat: 'host', serverUrl: this.serverUrl });
       this.publish();
     });
 
-    socket.on('room:joined', (payload: { code: string; token: string; seat: OnlineRole; reconnected: boolean }) => {
+    socket.on('room:joined', (payload: { code: string; token: string; seat: OnlineRole; reconnected: boolean; roomState?: RoomStatePayload }) => {
       this.roomCode = payload.code;
       this.token = payload.token;
       this.seat = payload.seat;
+      if (payload.roomState) {
+        this.roomState = payload.roomState;
+        this.pausedForGuest = payload.roomState.pausedForGuest;
+        if (this.seat === 'host') {
+          this.opponentConnected = payload.roomState.guest?.connected ?? false;
+        } else if (this.seat === 'guest') {
+          this.opponentConnected = payload.roomState.host.connected;
+        }
+      }
       this.closedReason = null;
       this.errorMessage = null;
       saveSession({ roomCode: payload.code, token: payload.token, seat: payload.seat, serverUrl: this.serverUrl });
@@ -353,11 +373,15 @@ export class OnlineMatchController {
   }
 
   createRoom(): void {
+    this.errorMessage = null;
+    this.publish();
     const socket = this.connect();
     socket.emit('room:create', { protocolVersion: PROTOCOL_VERSION, rulesVersion: RULES_VERSION });
   }
 
   joinRoom(code: string): void {
+    this.errorMessage = null;
+    this.publish();
     const formatted = code.trim().toUpperCase();
     if (formatted.length !== 8) {
       this.errorMessage = '房间码必须是 8 位字符。';
@@ -366,6 +390,14 @@ export class OnlineMatchController {
     }
     const socket = this.connect();
     socket.emit('room:join', { roomCode: formatted, protocolVersion: PROTOCOL_VERSION, rulesVersion: RULES_VERSION });
+
+    // 超时兜底：若 6 秒内既未进入房间也未收到错误（如网络丢包或连接阻塞），主动提示
+    setTimeout(() => {
+      if (!this.roomCode && !this.errorMessage) {
+        this.errorMessage = '加入房间无响应（请求超时）。请确认中继服务运行正常，且双方网络可互通。';
+        this.publish();
+      }
+    }, 6000);
   }
 
   restoreSessionIfAny(): boolean {
