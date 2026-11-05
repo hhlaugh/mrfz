@@ -410,7 +410,28 @@ export class OnlineMatchController {
     const { event, payload } = data as { event: string; payload: any };
 
     if (this.seat === 'host') {
-      if (event === 'room:selectDeck') {
+      if (event === 'room:join_request') {
+        // Guest主动请求加入或补发确认
+        if (this.roomState) {
+          this.roomState = {
+            ...this.roomState,
+            guest: {
+              connected: true,
+              deckId: this.roomState.guest?.deckId ?? DEMO_DECKS[1]?.deck_id ?? 'demo-aggro',
+              ready: this.roomState.guest?.ready ?? false,
+            },
+          };
+          this.opponentConnected = true;
+          this.publish();
+          this.sendP2P('room:joined', {
+            code: this.roomCode,
+            seat: 'guest',
+            token: 'p2p-token',
+            reconnected: false,
+            roomState: this.roomState,
+          });
+        }
+      } else if (event === 'room:selectDeck') {
         if (this.roomState?.guest) {
           this.roomState = {
             ...this.roomState,
@@ -447,18 +468,20 @@ export class OnlineMatchController {
           this.publish();
         }
       }
-    } else if (this.seat === 'guest') {
+    } else {
+      // 客机处理消息（包含刚接入尚未被置为 'guest' 坐席的情况）
       if (event === 'room:joined') {
         this.roomCode = payload.code;
         this.seat = 'guest';
         this.roomState = payload.roomState;
         this.opponentConnected = true;
         this.connected = true;
+        this.closedReason = null;
         this.errorMessage = null;
         this.publish();
       } else if (event === 'room:state') {
         this.roomState = payload;
-        this.opponentConnected = payload.host.connected;
+        this.opponentConnected = Boolean(payload?.host?.connected ?? true);
         this.publish();
       } else if (event === 'match:start') {
         this.matchId = payload.matchId;
@@ -523,27 +546,41 @@ export class OnlineMatchController {
       peer.on('connection', (conn) => {
         this.p2pConn = conn;
 
-        conn.on('open', () => {
+        const onConnected = () => {
           this.opponentConnected = true;
           if (this.roomState) {
             this.roomState = {
               ...this.roomState,
-              guest: { connected: true, deckId: DEMO_DECKS[1]?.deck_id ?? 'demo-aggro', ready: false },
+              guest: {
+                connected: true,
+                deckId: this.roomState.guest?.deckId ?? DEMO_DECKS[1]?.deck_id ?? 'demo-aggro',
+                ready: false,
+              },
             };
           }
           this.publish();
 
-          conn.send({
-            event: 'room:joined',
-            payload: {
-              code,
-              seat: 'guest',
-              token: 'p2p-token',
-              reconnected: false,
-              roomState: this.roomState,
-            },
-          });
-        });
+          try {
+            conn.send({
+              event: 'room:joined',
+              payload: {
+                code,
+                seat: 'guest',
+                token: 'p2p-token',
+                reconnected: false,
+                roomState: this.roomState,
+              },
+            });
+          } catch (e) {
+            console.warn('Failed to send room:joined to guest:', e);
+          }
+        };
+
+        if (conn.open) {
+          onConnected();
+        } else {
+          conn.on('open', onConnected);
+        }
 
         conn.on('data', (data) => {
           this.handleP2PMessage(data);
@@ -583,6 +620,10 @@ export class OnlineMatchController {
 
   private joinRoomP2P(code: string): void {
     this.cleanupPeer();
+    this.closedReason = null;
+    this.errorMessage = null;
+    this.publish();
+
     const targetPeerId = 'mrfz7-' + code.toLowerCase();
 
     try {
@@ -601,11 +642,26 @@ export class OnlineMatchController {
         const conn = peer.connect(targetPeerId, { reliable: true });
         this.p2pConn = conn;
 
-        conn.on('open', () => {
+        const onConnOpen = () => {
           this.connected = true;
           this.errorMessage = null;
           this.publish();
-        });
+          // 主动向房主打招呼申请加入房间
+          try {
+            conn.send({
+              event: 'room:join_request',
+              payload: { code },
+            });
+          } catch (e) {
+            console.warn('Failed to send join request:', e);
+          }
+        };
+
+        if (conn.open) {
+          onConnOpen();
+        } else {
+          conn.on('open', onConnOpen);
+        }
 
         conn.on('data', (data) => {
           this.handleP2PMessage(data);
@@ -613,7 +669,11 @@ export class OnlineMatchController {
 
         conn.on('close', () => {
           this.opponentConnected = false;
-          this.closedReason = 'HOST_LEFT';
+          // 仅当客机已成功入座且在房间中时，连接断开才视作房主关闭/离开
+          if (this.seat === 'guest' && this.roomCode) {
+            this.closedReason = 'HOST_LEFT';
+            this.inGame = false;
+          }
           this.publish();
         });
 
@@ -627,7 +687,7 @@ export class OnlineMatchController {
         if (err.type === 'peer-unavailable') {
           this.errorMessage = `未找到房间「${code}」。请确认房主已创建房间且仍在等待大厅中。`;
         } else {
-          this.errorMessage = `P2P 直连失败（${err.type}）。`;
+          this.errorMessage = `P2P 直连失败（${err.type}）。可稍后重试或尝试中继模式。`;
         }
         this.publish();
       });
@@ -849,12 +909,14 @@ export class OnlineMatchController {
   private cleanupPeer(): void {
     if (this.p2pConn) {
       try {
+        (this.p2pConn as any).removeAllListeners?.();
         this.p2pConn.close();
       } catch {}
       this.p2pConn = null;
     }
     if (this.peer) {
       try {
+        (this.peer as any).removeAllListeners?.();
         this.peer.destroy();
       } catch {}
       this.peer = null;
