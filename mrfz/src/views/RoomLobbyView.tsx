@@ -85,16 +85,33 @@ export function RoomLobbyView({ controller, snapshot, onBackToTitle }: RoomLobby
         <h1>好友联机对战</h1>
         <p className="subtitle">基于 Node.js + Socket.IO 中继服务 · 房主权威架构</p>
 
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '13px', margin: '4px 0 14px', background: 'rgba(255,255,255,0.05)', padding: '6px 12px', borderRadius: '8px' }}>
-          <span style={{ width: 10, height: 10, borderRadius: '50%', background: snapshot.connected ? '#48bb78' : '#e53e3e' }} />
-          <span>中继服务：{snapshot.connected ? '🟢 已连接' : '🔴 未连接（请确认中继已启动）'}</span>
-          <span style={{ color: '#718096', fontSize: '11px' }}>({snapshot.serverUrl})</span>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', margin: '10px 0 12px', flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            className={`btn small ${snapshot.mode === 'p2p' ? 'primary' : ''}`}
+            onClick={() => controller.setMode('p2p')}
+          >
+            🌐 P2P 直连模式（推荐 · 免服务器 · 支持手机跨设备）
+          </button>
+          <button
+            type="button"
+            className={`btn small ${snapshot.mode === 'relay' ? 'primary' : ''}`}
+            onClick={() => controller.setMode('relay')}
+          >
+            ⚡ Socket.IO 中继模式
+          </button>
         </div>
 
-        {isGitHubPages && (
-          <div className="alert-box warn" style={{ textAlign: 'left', lineHeight: 1.5 }}>
-            <b>💡 GitHub Pages 环境提示：</b>
-            当前页面运行在 GitHub Pages（静态托管无法提供 WebSocket 实时服务）。联机时双方需连接相同的中继服务端（例如本地终端执行 <code>npm run relay</code> 并使用 <code>http://localhost:8787</code>，或在下方“高级设置”填入公网中继端地址）。
+        {snapshot.mode === 'p2p' ? (
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '13px', margin: '4px 0 14px', background: 'rgba(76, 195, 138, 0.1)', border: '1px solid rgba(76, 195, 138, 0.3)', padding: '6px 14px', borderRadius: '8px', color: '#68d391' }}>
+            <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#48bb78' }} />
+            <span>当前模式：<b>WebRTC P2P 直连</b> · 免搭服务器，房主创建房间后好友输入房间码即可直接对战</span>
+          </div>
+        ) : (
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '13px', margin: '4px 0 14px', background: 'rgba(255,255,255,0.05)', padding: '6px 12px', borderRadius: '8px' }}>
+            <span style={{ width: 10, height: 10, borderRadius: '50%', background: snapshot.connected ? '#48bb78' : '#e53e3e' }} />
+            <span>中继服务：{snapshot.connected ? '🟢 已连接' : '🔴 未连接（需本地 npm run relay 或配置公网中继）'}</span>
+            <span style={{ color: '#718096', fontSize: '11px' }}>({snapshot.serverUrl})</span>
           </div>
         )}
 
@@ -157,53 +174,55 @@ export function RoomLobbyView({ controller, snapshot, onBackToTitle }: RoomLobby
           </div>
         </div>
 
-        <div className="server-config-section">
-          <button className="btn link-btn" onClick={() => setShowServerConfig(!showServerConfig)}>
-            {showServerConfig ? '▲ 收起中继服务配置' : '▼ 高级设置：中继服务器地址'}
-          </button>
-          {showServerConfig && (
-            <div className="server-config-box">
-              <label>
-                中继服务 URL：
-                <input
-                  type="text"
-                  value={serverUrl}
-                  onChange={(e) => setServerUrl(e.target.value)}
-                  placeholder="http://localhost:8787"
-                />
-              </label>
-              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', margin: '6px 0' }}>
-                <button
-                  type="button"
-                  className="btn small"
-                  onClick={() => {
-                    const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8787';
-                    setServerUrl(origin);
-                    controller.setServerUrl(origin);
-                  }}
-                >
-                  设为当前站点同源
-                </button>
-                <button
-                  type="button"
-                  className="btn small"
-                  onClick={() => {
-                    setServerUrl('http://localhost:8787');
-                    controller.setServerUrl('http://localhost:8787');
-                  }}
-                >
-                  设为本地独立端 (8787)
-                </button>
-                <button className="btn small primary" onClick={() => controller.setServerUrl(serverUrl.trim())}>
-                  应用并重连
-                </button>
+        {snapshot.mode === 'relay' && (
+          <div className="server-config-section">
+            <button className="btn link-btn" onClick={() => setShowServerConfig(!showServerConfig)}>
+              {showServerConfig ? '▲ 收起中继服务配置' : '▼ 高级设置：中继服务器地址'}
+            </button>
+            {showServerConfig && (
+              <div className="server-config-box">
+                <label>
+                  中继服务 URL：
+                  <input
+                    type="text"
+                    value={serverUrl}
+                    onChange={(e) => setServerUrl(e.target.value)}
+                    placeholder="http://localhost:8787"
+                  />
+                </label>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', margin: '6px 0' }}>
+                  <button
+                    type="button"
+                    className="btn small"
+                    onClick={() => {
+                      const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8787';
+                      setServerUrl(origin);
+                      controller.setServerUrl(origin);
+                    }}
+                  >
+                    设为当前站点同源
+                  </button>
+                  <button
+                    type="button"
+                    className="btn small"
+                    onClick={() => {
+                      setServerUrl('http://localhost:8787');
+                      controller.setServerUrl('http://localhost:8787');
+                    }}
+                  >
+                    设为本地独立端 (8787)
+                  </button>
+                  <button className="btn small primary" onClick={() => controller.setServerUrl(serverUrl.trim())}>
+                    应用并重连
+                  </button>
+                </div>
+                <p className="hint">
+                  开发服务器已内置集成中继服务（同源直连即可）。若运行了独立 <code>npm run relay</code> 服务，可切换为 <code>http://localhost:8787</code>。
+                </p>
               </div>
-              <p className="hint">
-                开发服务器已内置集成中继服务（同源直连即可）。若运行了独立 <code>npm run relay</code> 服务，可切换为 <code>http://localhost:8787</code>。
-              </p>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
         <button className="btn" onClick={onBackToTitle}>
           返回标题页
@@ -236,6 +255,9 @@ export function RoomLobbyView({ controller, snapshot, onBackToTitle }: RoomLobby
         <button className="btn small" onClick={copyCode}>
           {copied ? '✅ 已复制' : '📋 复制房间码'}
         </button>
+        <span style={{ fontSize: 11, background: snapshot.mode === 'p2p' ? 'rgba(76,195,138,0.2)' : 'rgba(79,140,255,0.2)', padding: '2px 8px', borderRadius: 999, border: '1px solid rgba(255,255,255,0.1)' }}>
+          {snapshot.mode === 'p2p' ? '🌐 P2P 直连' : '⚡ 中继模式'}
+        </span>
         <span className="hint">将房间码发给朋友，对方输入即可加入</span>
       </div>
 
