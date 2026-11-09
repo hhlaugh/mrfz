@@ -5,7 +5,7 @@ import type {
 } from './types';
 import { normalizeSeed, seededRandomSource, shuffleDeck } from './random';
 import type { RandomSource } from './random';
-import { applyEffectDamage, applyStatusToInstance, expireOwnerTurnStatuses, grantSp, naturalSpAtTurnStart, resolveCombat } from './combat';
+import { addCombatLog, applyEffectDamage, applyStatusToInstance, expireOwnerTurnStatuses, grantSp, naturalSpAtTurnStart, resolveCombat } from './combat';
 
 export const OPENING_HAND_SIZE = 5;
 export const HAND_LIMIT = 10;
@@ -301,6 +301,7 @@ function applyOnDeployEffects(state: GameState, actorId: PlayerId, deployedId: C
   const currentLane = deployed.lane;
 
   const actions = definition.effect_json?.actions ?? [];
+  const actorPlayer = actorId === 'player_a' ? '玩家 A' : '玩家 B';
   for (const action of actions) {
     if (action.type === 'gain_sp') {
       const val = typeof action.value === 'number' ? action.value : 0;
@@ -320,6 +321,15 @@ function applyOnDeployEffects(state: GameState, actorId: PlayerId, deployedId: C
                 shield: inst.operator_combat.shield + val,
               },
             },
+          });
+          next = addCombatLog(next, {
+            type: 'effect_triggered',
+            source_instance_id: deployedId,
+            source_player_id: actorId,
+            source_name: definition.card_name_zh,
+            action_type: 'deploy_effect',
+            amount: val,
+            detail: `${actorPlayer}【${definition.card_name_zh}】触发部署效果【防御整备】：自身获得 ${val} 点护盾！`,
           });
         }
       }
@@ -352,6 +362,15 @@ function applyOnDeployEffects(state: GameState, actorId: PlayerId, deployedId: C
         }
         if (Object.keys(updates).length > 0) {
           next = setInstances(next, updates);
+          next = addCombatLog(next, {
+            type: 'effect_triggered',
+            source_instance_id: deployedId,
+            source_player_id: actorId,
+            source_name: definition.card_name_zh,
+            action_type: 'deploy_effect',
+            amount: val,
+            detail: `${actorPlayer}【${definition.card_name_zh}】触发部署效果【狙击支援】：同路友方远程干员攻击力 +${val}！`,
+          });
         }
       }
     } else if (action.type === 'debuff_attack') {
@@ -380,6 +399,15 @@ function applyOnDeployEffects(state: GameState, actorId: PlayerId, deployedId: C
         }
         if (Object.keys(updates).length > 0) {
           next = setInstances(next, updates);
+          next = addCombatLog(next, {
+            type: 'effect_triggered',
+            source_instance_id: deployedId,
+            source_player_id: actorId,
+            source_name: definition.card_name_zh,
+            action_type: 'deploy_effect',
+            amount: val,
+            detail: `${actorPlayer}【${definition.card_name_zh}】触发部署效果【自然震慑】：同路敌方前位干员攻击力 -${val}！`,
+          });
         }
       }
     } else if (action.type === 'apply_status') {
@@ -392,6 +420,19 @@ function applyOnDeployEffects(state: GameState, actorId: PlayerId, deployedId: C
         );
         if (enemy) {
           next = applyStatusToInstance(next, enemy.card_instance_id, status as import('./types').StatusKind, duration);
+          const enemyDef = findCardDefinition(next, enemy.card_id);
+          const statusZh = status === 'freeze' ? '冻结' : status === 'stun' ? '眩晕' : status === 'slow' ? '减速' : '落地';
+          next = addCombatLog(next, {
+            type: 'effect_triggered',
+            source_instance_id: deployedId,
+            target_instance_id: enemy.card_instance_id,
+            source_player_id: actorId,
+            target_player_id: enemy.controller_id,
+            source_name: definition.card_name_zh,
+            target_name: enemyDef?.card_name_zh,
+            action_type: 'deploy_effect',
+            detail: `${actorPlayer}【${definition.card_name_zh}】触发部署效果【战术控场】：使敌方【${enemyDef?.card_name_zh ?? enemy.card_instance_id}】陷入【${statusZh}】状态！`,
+          });
         }
       }
     } else if (action.type === 'damage') {
@@ -447,6 +488,34 @@ function deployOperator(state: GameState, actorId: PlayerId, cardInstanceId: Car
   const nextPlayer = { ...player, hand: remainingHand, cost: nextCost };
   let nextState = setPlayer(state, actorId, nextPlayer);
   nextState = setInstances(nextState, { [cardInstanceId]: deployed });
+
+  const actorPlayer = actorId === 'player_a' ? '玩家 A' : '玩家 B';
+  const laneZh = lane === 'left' ? '左路' : lane === 'center' ? '中路' : '右路';
+  const posZh = position === 'front' ? '前排' : '后排';
+  nextState = addCombatLog(nextState, {
+    type: 'unit_deployed',
+    source_instance_id: cardInstanceId,
+    source_player_id: actorId,
+    source_name: definition.card_name_zh,
+    lane,
+    position,
+    amount: definition.cost,
+    action_type: 'deploy',
+    detail: `${actorPlayer} 部署了【${definition.card_name_zh}】于 [${laneZh}·${posZh}]（消耗 ${definition.cost} 费）。`,
+  });
+
+  if (onDeploy.gainCost > 0) {
+    nextState = addCombatLog(nextState, {
+      type: 'effect_triggered',
+      source_instance_id: cardInstanceId,
+      source_player_id: actorId,
+      source_name: definition.card_name_zh,
+      action_type: 'deploy_effect',
+      amount: onDeploy.gainCost,
+      detail: `${actorPlayer}【${definition.card_name_zh}】触发部署效果【战术调度】：获得 ${onDeploy.gainCost} 点部署费用！`,
+    });
+  }
+
   nextState = applyOnDeployEffects(nextState, actorId, cardInstanceId, definition);
   return {
     ok: true,
@@ -525,11 +594,34 @@ function commitWithdrawal(state: GameState, actorId: PlayerId, targetId: CardIns
     const prior = updatedPlayers[equipmentOwner] ?? state.players[equipmentOwner];
     updatedPlayers[equipmentOwner] = { ...prior, discard: [...prior.discard, equipmentId] };
   }
-  return {
+
+  const actorPlayer = actorId === 'player_a' ? '玩家 A' : '玩家 B';
+  const laneZh = instance.lane === 'left' ? '左路' : instance.lane === 'center' ? '中路' : instance.lane === 'right' ? '右路' : '';
+  const posZh = instance.position === 'front' ? '前排' : instance.position === 'back' ? '后排' : '';
+  const posText = laneZh ? `从 [${laneZh}·${posZh}] ` : '';
+  const refundText = refund > 0 ? `，返还 ${refund} 点费用` : '';
+  const cdText = cd > 0 ? `，再部署冷却 ${cd} 回合` : '';
+  const detail = `${actorPlayer}【${definition.card_name_zh}】${posText}主动撤离战场，返回手牌${refundText}${cdText}。`;
+
+  let resultState: GameState = {
     ...state,
     players: { ...state.players, ...updatedPlayers },
     card_instances: { ...state.card_instances, ...instanceUpdates },
   };
+
+  resultState = addCombatLog(resultState, {
+    type: 'unit_withdrawn',
+    source_instance_id: targetId,
+    source_player_id: actorId,
+    source_name: definition.card_name_zh,
+    lane: instance.lane ?? undefined,
+    position: instance.position ?? undefined,
+    amount: refund,
+    action_type: 'withdraw',
+    detail,
+  });
+
+  return resultState;
 }
 
 function withdrawNormally(state: GameState, actorId: PlayerId, targetId: CardInstanceId): EngineResult<GameState> {
@@ -693,12 +785,29 @@ function activateActiveSkill(state: GameState, actorId: PlayerId, sourceId: Card
   const flag = `active_skill_used_turn_${state.players[actorId].turns_taken}`;
   if (source.operator_lifecycle.once_per_game_flags[flag] || !Number.isInteger(maxUses) || maxUses < 1) return { ok: false, value: state, reason: '主动技能本回合使用次数已达上限。' };
 
-  const afterCost = setInstances(state, {
+  const actorPlayer = actorId === 'player_a' ? '玩家 A' : '玩家 B';
+  const skillName = (definition as unknown as { active_skill_name_zh?: string; skill_name?: string }).active_skill_name_zh || (definition as unknown as { active_skill_name_zh?: string; skill_name?: string }).skill_name || '主动技能';
+
+  let afterCost = setInstances(state, {
     [sourceId]: {
       ...source,
       operator_combat: { ...source.operator_combat, current_sp: (source.operator_combat.current_sp - cost) as SpValue },
       operator_lifecycle: { ...source.operator_lifecycle, once_per_game_flags: { ...source.operator_lifecycle.once_per_game_flags, [flag]: true } },
     },
+  });
+
+  afterCost = addCombatLog(afterCost, {
+    type: 'skill_activated',
+    source_instance_id: sourceId,
+    target_instance_id: targetId,
+    source_player_id: actorId,
+    target_player_id: target?.controller_id,
+    source_name: definition.card_name_zh,
+    target_name: targetDefinition?.card_name_zh,
+    skill_name: skillName,
+    amount: cost,
+    action_type: 'active_skill',
+    detail: `${actorPlayer}【${definition.card_name_zh}】消耗 ${cost} SP 触发技能【${skillName}】！`,
   });
 
   if (action.type === 'damage') {
@@ -715,7 +824,8 @@ function activateActiveSkill(state: GameState, actorId: PlayerId, sourceId: Card
     const recipientId = targetId && target?.controller_id === actorId ? targetId : sourceId;
     const recipient = afterCost.card_instances[recipientId];
     if (recipient?.operator_combat) {
-      const afterEffect = setInstances(afterCost, {
+      const recipientDef = findCardDefinition(afterCost, recipient.card_id);
+      let afterEffect = setInstances(afterCost, {
         [recipientId]: {
           ...recipient,
           operator_combat: {
@@ -723,6 +833,19 @@ function activateActiveSkill(state: GameState, actorId: PlayerId, sourceId: Card
             current_atk_modifiers: [...recipient.operator_combat.current_atk_modifiers, val],
           },
         },
+      });
+      afterEffect = addCombatLog(afterEffect, {
+        type: 'effect_triggered',
+        source_instance_id: sourceId,
+        target_instance_id: recipientId,
+        source_player_id: actorId,
+        target_player_id: recipient.controller_id,
+        source_name: definition.card_name_zh,
+        target_name: recipientDef?.card_name_zh,
+        skill_name: skillName,
+        amount: val,
+        action_type: 'skill_buff',
+        detail: `${actorPlayer}【${definition.card_name_zh}】触发技能【${skillName}】，使【${recipientDef?.card_name_zh ?? '自身'}】攻击力提升 ${val} 点！`,
       });
       return { ok: true, value: { ...afterEffect, state_version: state.state_version + 1 } };
     }
@@ -736,7 +859,7 @@ function activateActiveSkill(state: GameState, actorId: PlayerId, sourceId: Card
       const val = typeof action.value === 'number' ? action.value : 2;
       const maxHp = recDef.hp ?? recipient.operator_combat.current_hp;
       const actualHeal = Math.min(val, maxHp - recipient.operator_combat.current_hp);
-      const afterEffect = setInstances(afterCost, {
+      let afterEffect = setInstances(afterCost, {
         [recipientId]: {
           ...recipient,
           operator_combat: {
@@ -745,6 +868,19 @@ function activateActiveSkill(state: GameState, actorId: PlayerId, sourceId: Card
           },
         },
       });
+      afterEffect = addCombatLog(afterEffect, {
+        type: 'healed',
+        source_instance_id: sourceId,
+        target_instance_id: recipientId,
+        source_player_id: actorId,
+        target_player_id: recipient.controller_id,
+        source_name: definition.card_name_zh,
+        target_name: recDef.card_name_zh,
+        skill_name: skillName,
+        amount: actualHeal,
+        action_type: 'skill_heal',
+        detail: `${actorPlayer}【${definition.card_name_zh}】触发技能【${skillName}】，为【${recDef.card_name_zh}】治疗 ${actualHeal} 点 HP！`,
+      });
       return { ok: true, value: { ...afterEffect, state_version: state.state_version + 1 } };
     }
   }
@@ -752,7 +888,20 @@ function activateActiveSkill(state: GameState, actorId: PlayerId, sourceId: Card
   if (action.type === 'apply_status') {
     if (targetId && target && target.controller_id !== actorId && action.status) {
       const duration = typeof action.duration_owner_turns === 'number' ? action.duration_owner_turns : 1;
-      const afterEffect = applyStatusToInstance(afterCost, targetId, action.status as import('./types').StatusKind, duration);
+      let afterEffect = applyStatusToInstance(afterCost, targetId, action.status as import('./types').StatusKind, duration);
+      const statusZh = action.status === 'freeze' ? '冻结' : action.status === 'stun' ? '眩晕' : action.status === 'slow' ? '减速' : '落地';
+      afterEffect = addCombatLog(afterEffect, {
+        type: 'effect_triggered',
+        source_instance_id: sourceId,
+        target_instance_id: targetId,
+        source_player_id: actorId,
+        target_player_id: target.controller_id,
+        source_name: definition.card_name_zh,
+        target_name: targetDefinition?.card_name_zh,
+        skill_name: skillName,
+        action_type: 'skill_status',
+        detail: `${actorPlayer}【${definition.card_name_zh}】触发技能【${skillName}】，使目标【${targetDefinition?.card_name_zh}】陷入【${statusZh}】状态（持续 ${duration} 回合）！`,
+      });
       return { ok: true, value: { ...afterEffect, state_version: state.state_version + 1 } };
     }
   }

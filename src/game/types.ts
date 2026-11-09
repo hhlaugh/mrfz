@@ -151,14 +151,25 @@ export interface GameState {
 export type CombatLogEventType =
   | 'attack_declared' | 'target_selected' | 'reaction_triggered' | 'sp_spent'
   | 'damage_resolved' | 'shield_absorbed' | 'base_damaged' | 'unit_defeated'
-  | 'sp_gained' | 'status_expired' | 'healed' | 'trigger_limit';
+  | 'sp_gained' | 'status_expired' | 'healed' | 'trigger_limit'
+  | 'skill_activated' | 'effect_triggered' | 'unit_deployed' | 'unit_withdrawn' | 'status_applied';
+
 export interface CombatLogEvent {
   readonly sequence: number;
   readonly type: CombatLogEventType;
   readonly source_instance_id?: CardInstanceId;
   readonly target_instance_id?: CardInstanceId;
   readonly player_id?: PlayerId;
+  readonly source_player_id?: PlayerId;
+  readonly target_player_id?: PlayerId;
+  readonly source_name?: string;
+  readonly target_name?: string;
+  readonly skill_name?: string;
+  readonly action_type?: string;
+  readonly lane?: LaneId;
+  readonly position?: Position;
   readonly amount?: number;
+  readonly absorbed?: number;
   readonly detail: string;
 }
 export interface DeckDefinition {
