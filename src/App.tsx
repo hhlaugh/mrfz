@@ -4,16 +4,17 @@ import type { LocalGameSetup } from './client/localGameController';
 import { OnlineMatchController, type OnlineMatchSnapshot } from './client/onlineMatchController';
 import { BotPlayer, botMulliganChoice } from './ai/botPlayer';
 import { enumerateLegalActions } from './game/legal-actions';
-import { DEMO_CARDS, DEMO_DECKS } from './client/demoData';
+import { DEMO_CARDS, getAllAvailableDecks } from './client/demoData';
 import { StartView } from './views/StartView';
 import { DeckSelectView } from './views/DeckSelectView';
+import { DeckEditorView } from './views/DeckEditorView';
 import { MulliganView } from './views/MulliganView';
 import { BattleView } from './views/BattleView';
 import { SettlementView } from './views/SettlementView';
 import { RoomLobbyView } from './views/RoomLobbyView';
 import type { CardInstanceId, DeckDefinition, PlayerId } from './game/types';
 
-type Screen = 'title' | 'deckSelect' | 'game' | 'online';
+type Screen = 'title' | 'deckSelect' | 'game' | 'online' | 'deckEditor';
 type Mode = 'hotseat' | 'vs-bot' | 'online';
 
 function randomSeed(): number {
@@ -27,6 +28,10 @@ export function App() {
 
   const onlineController = useMemo(() => new OnlineMatchController(), []);
   const onlineSnapshot = useSyncExternalStore(onlineController.subscribe, onlineController.getSnapshot);
+
+  if (screen === 'deckEditor') {
+    return <DeckEditorView onBack={() => setScreen('title')} />;
+  }
 
   if (screen === 'title') {
     return (
@@ -42,6 +47,9 @@ export function App() {
         onOnline={() => {
           setMode('online');
           setScreen('online');
+        }}
+        onDeckEditor={() => {
+          setScreen('deckEditor');
         }}
       />
     );
@@ -65,6 +73,7 @@ export function App() {
       <DeckSelectView
         mode={mode}
         onCancel={() => setScreen('title')}
+        onOpenDeckEditor={() => setScreen('deckEditor')}
         onStart={(setup: LocalGameSetup) => {
           setController(LocalGameController.create(setup));
           setScreen('game');
@@ -203,8 +212,9 @@ function OnlineScreen({ controller, snapshot, onExit }: OnlineScreenProps) {
   const state = gameSnapshot.state;
   const mySeat: PlayerId = snapshot.seat === 'host' ? 'player_a' : 'player_b';
 
-  const deckA: DeckDefinition = DEMO_DECKS.find((d) => d.deck_id === snapshot.hostDeckId) ?? DEMO_DECKS[0]!;
-  const deckB: DeckDefinition = DEMO_DECKS.find((d) => d.deck_id === snapshot.guestDeckId) ?? DEMO_DECKS[1] ?? deckA;
+  const allDecks = getAllAvailableDecks();
+  const deckA: DeckDefinition = allDecks.find((d) => d.deck_id === snapshot.hostDeckId) ?? allDecks[0]!;
+  const deckB: DeckDefinition = allDecks.find((d) => d.deck_id === snapshot.guestDeckId) ?? allDecks[1] ?? deckA;
 
   const setup: LocalGameSetup = {
     decks: { player_a: deckA, player_b: deckB },

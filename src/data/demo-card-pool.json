@@ -1,5 +1,4594 @@
 [
   {
+    "card_id": "OP-VAN-001",
+    "card_name_zh": "芬",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 3,
+    "cost": 1,
+    "hp": 3,
+    "atk": 1,
+    "class": "vanguard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.5,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attacked",
+    "effect_json": {
+      "trigger": "on_attacked",
+      "actions": [
+        {
+          "type": "reduce_incoming_damage",
+          "target": "self",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-VAN-001-SK01",
+          "skill_name": "前位稳固",
+          "skill_type": "passive_free",
+          "trigger": "on_attacked",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "reduce_damage",
+              "target": "self",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "self_position": "front"
+          },
+          "limit": {
+            "per_combat": 1
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "位于前位时，每场战斗首次受到的伤害-1。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "先锋;低费;防守"
+  },
+  {
+    "card_id": "OP-VAN-002",
+    "card_name_zh": "翎羽",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 3,
+    "cost": 2,
+    "hp": 2,
+    "atk": 2,
+    "class": "vanguard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.5,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_kill",
+    "effect_json": {
+      "trigger": "on_kill",
+      "actions": [
+        {
+          "type": "gain_cost",
+          "target": "owner",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-VAN-002-SK01",
+          "skill_name": "击杀回费",
+          "skill_type": "passive_free",
+          "trigger": "on_kill",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "gain_cost",
+              "target": "owner",
+              "value": 1
+            }
+          ],
+          "limit": {
+            "per_owner_turn": 1
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "击杀敌方干员后，获得1点费用；每回合限一次。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "先锋;击杀;资源"
+  },
+  {
+    "card_id": "OP-VAN-003",
+    "card_name_zh": "桃金娘",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 2,
+    "hp": 4,
+    "atk": 1,
+    "class": "vanguard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.5,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "gain_cost",
+          "target": "owner",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-VAN-003-SK01",
+          "skill_name": "快速部署",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "gain_cost",
+              "target": "owner",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "部署时获得1点费用。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "先锋;产费;速攻"
+  },
+  {
+    "card_id": "OP-VAN-004",
+    "card_name_zh": "讯使",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 5,
+    "atk": 2,
+    "class": "vanguard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "gain_sp",
+          "target": "self",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-VAN-004-SK01",
+          "skill_name": "先锋协同",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "gain_sp",
+              "target": "self",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "another_friendly_same_lane_class": "vanguard"
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "部署时，若同一路另有友方先锋，自身获得1SP。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "先锋;耐久;前排"
+  },
+  {
+    "card_id": "OP-VAN-005",
+    "card_name_zh": "红豆",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 2,
+    "hp": 2,
+    "atk": 3,
+    "class": "vanguard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 2,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.5,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "none",
+    "effect_json": {
+      "trigger": "none",
+      "actions": [],
+      "skill_priority": 0,
+      "skills": []
+    },
+    "rules_text_zh": "击杀敌方干员时额外获得1点SP（即该干员击杀回复SP为2）。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "先锋;击杀;爆发"
+  },
+  {
+    "card_id": "OP-VAN-006",
+    "card_name_zh": "德克萨斯",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 3,
+    "hp": 4,
+    "atk": 3,
+    "class": "vanguard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "apply_status",
+          "target": "enemy_front_same_lane",
+          "value": 1,
+          "status": "slow",
+          "duration": "next_owner_combat"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-VAN-006-SK01",
+          "skill_name": "战术扰乱",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "apply_status",
+              "target": "enemy_front_same_lane",
+              "value": 1,
+              "status": "slow",
+              "duration": "next_owner_combat"
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "部署时，使同一路敌方前位干员减速1次战斗。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "先锋;控制;节奏"
+  },
+  {
+    "card_id": "OP-VAN-007",
+    "card_name_zh": "极境",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 3,
+    "hp": 4,
+    "atk": 2,
+    "class": "vanguard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "buff_attack",
+          "target": "friendly_ranged_same_lane",
+          "value": 1,
+          "duration": "this_combat"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-VAN-007-SK01",
+          "skill_name": "远程协同",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "buff_attack",
+              "target": "friendly_ranged_same_lane",
+              "value": 1,
+              "duration": "this_combat"
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "部署时，使同一路友方远程干员本场战斗攻击力+1。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "先锋;狙击协同;增益"
+  },
+  {
+    "card_id": "OP-VAN-008",
+    "card_name_zh": "推进之王",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 5,
+    "hp": 6,
+    "atk": 5,
+    "class": "vanguard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": 3,
+    "active_skill_text_zh": "王者号令（消耗 3 SP）：buff_attack",
+    "effect_trigger": "active",
+    "effect_json": {
+      "trigger": "active",
+      "actions": [
+        {
+          "type": "buff_attack",
+          "target": "all_friendly_same_lane",
+          "value": 1,
+          "duration": "this_combat"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-VAN-008-SK01",
+          "skill_name": "王者号令",
+          "skill_type": "active",
+          "trigger": "active",
+          "sp_cost": 3,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "buff_attack",
+              "target": "all_friendly_same_lane",
+              "value": 1,
+              "duration": "this_combat"
+            }
+          ],
+          "target_scope": "same_lane_friendly"
+        }
+      ]
+    },
+    "rules_text_zh": "主动技能：消耗3SP，使同一路所有友方干员本场战斗攻击力+1。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "先锋;高费;击杀;资源"
+  },
+  {
+    "card_id": "OP-VAN-009",
+    "card_name_zh": "风笛",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 5,
+    "hp": 5,
+    "atk": 5,
+    "class": "vanguard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": 3,
+    "active_skill_text_zh": "战场先锋（消耗 3 SP）：buff_attack",
+    "effect_trigger": "active",
+    "effect_json": {
+      "trigger": "active",
+      "actions": [
+        {
+          "type": "buff_attack",
+          "target": "self",
+          "value": 2,
+          "duration": "this_combat"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-VAN-009-SK01",
+          "skill_name": "战场先锋",
+          "skill_type": "active",
+          "trigger": "active",
+          "sp_cost": 3,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "buff_attack",
+              "target": "self",
+              "value": 2,
+              "duration": "this_combat"
+            }
+          ],
+          "target_scope": "self"
+        }
+      ]
+    },
+    "rules_text_zh": "主动技能：消耗3SP，自身本场战斗攻击力+2。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "先锋;费用减免;速攻"
+  },
+  {
+    "card_id": "OP-GUA-001",
+    "card_name_zh": "玫兰莎",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 3,
+    "cost": 2,
+    "hp": 4,
+    "atk": 3,
+    "class": "guard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.5,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "none",
+    "effect_json": {
+      "trigger": "none",
+      "actions": [],
+      "skill_priority": 0,
+      "skills": []
+    },
+    "rules_text_zh": "无额外效果；以扎实的攻击与生命承担基础输出。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "近卫;基础;低星"
+  },
+  {
+    "card_id": "OP-GUA-002",
+    "card_name_zh": "月见夜",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 3,
+    "cost": 2,
+    "hp": 4,
+    "atk": 2,
+    "class": "guard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.5,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_declared",
+    "effect_json": {
+      "trigger": "on_attack_declared",
+      "actions": [
+        {
+          "type": "bonus_damage",
+          "target": "attack_target",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-GUA-002-SK01",
+          "skill_name": "破甲斩",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_declared",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "bonus_damage",
+              "target": "attack_target",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "target_max_hp_gte": 5
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "攻击最大生命值不低于5的敌方干员时，额外造成1点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "近卫;反重装;输出"
+  },
+  {
+    "card_id": "OP-GUA-003",
+    "card_name_zh": "刻刀",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 4,
+    "atk": 3,
+    "class": "guard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_declared",
+    "effect_json": {
+      "trigger": "on_attack_declared",
+      "actions": [
+        {
+          "type": "bonus_damage",
+          "target": "attack_target",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-GUA-003-SK01",
+          "skill_name": "碎盾斩",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_declared",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "bonus_damage",
+              "target": "attack_target",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "target_shield_gte": 1
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "攻击有护盾的敌方干员时，额外造成1点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "近卫;破盾;反制"
+  },
+  {
+    "card_id": "OP-GUA-004",
+    "card_name_zh": "宴",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 3,
+    "atk": 4,
+    "class": "guard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "gain_shield",
+          "target": "self",
+          "value": 2,
+          "duration": "until_combat_end"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-GUA-004-SK01",
+          "skill_name": "战术护盾",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "shield",
+              "target": "self",
+              "value": 2,
+              "duration": "until_combat_end"
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "部署时获得2点护盾，护盾在本场战斗结束时移除。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "近卫;刺客;护盾"
+  },
+  {
+    "card_id": "OP-GUA-005",
+    "card_name_zh": "拉普兰德",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 4,
+    "hp": 5,
+    "atk": 4,
+    "class": "guard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 4,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 0,
+    "sp_gain_on_attacked": 2,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_resolved",
+    "effect_json": {
+      "trigger": "on_attack_resolved",
+      "actions": [
+        {
+          "type": "apply_status",
+          "target": "attack_target",
+          "value": 1,
+          "status": "silence",
+          "duration": "until_end_of_target_next_turn"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-GUA-005-SK01",
+          "skill_name": "沉默剑",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_resolved",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "apply_status",
+              "target": "attack_target",
+              "value": 1,
+              "status": "silence",
+              "duration": "until_end_of_target_next_turn"
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "同路嘲讽。受到攻击时，若SP不少于2，自动消耗2SP，使本次伤害-2。冰冻/沉默状态按各自规则处理。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "近卫;封技;反制"
+  },
+  {
+    "card_id": "OP-GUA-006",
+    "card_name_zh": "幽灵鲨",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 4,
+    "hp": 6,
+    "atk": 3,
+    "class": "guard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_lethal",
+    "effect_json": {
+      "trigger": "on_lethal",
+      "actions": [
+        {
+          "type": "prevent_lethal",
+          "target": "self",
+          "value": 1,
+          "restore_hp": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-GUA-006-SK01",
+          "skill_name": "不死之身",
+          "skill_type": "passive_free",
+          "trigger": "on_lethal",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "prevent_lethal",
+              "target": "self",
+              "value": 1,
+              "restore_hp": 1
+            }
+          ],
+          "limit": {
+            "per_game": 1
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "每场对局首次受到致命伤害时，改为保留1点生命。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "近卫;续战;复起"
+  },
+  {
+    "card_id": "OP-GUA-007",
+    "card_name_zh": "银灰",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 6,
+    "hp": 6,
+    "atk": 6,
+    "class": "guard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": 4,
+    "active_skill_text_zh": "真银斩（消耗 4 SP）：damage",
+    "effect_trigger": "active",
+    "effect_json": {
+      "trigger": "active",
+      "actions": [
+        {
+          "type": "damage",
+          "target": "all_enemies_same_lane",
+          "value": 2
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-GUA-007-SK01",
+          "skill_name": "真银斩",
+          "skill_type": "active",
+          "trigger": "active",
+          "sp_cost": 4,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "damage",
+              "target": "all_enemies_same_lane",
+              "value": 2
+            }
+          ],
+          "target_scope": "same_lane_all_enemies"
+        }
+      ]
+    },
+    "rules_text_zh": "主动技能：消耗4SP，对同一路所有敌方干员各造成2点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "近卫;清场;高费"
+  },
+  {
+    "card_id": "OP-GUA-008",
+    "card_name_zh": "棘刺",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 5,
+    "hp": 7,
+    "atk": 4,
+    "class": "guard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "combat_end",
+    "effect_json": {
+      "trigger": "combat_end",
+      "actions": [
+        {
+          "type": "buff_attack",
+          "target": "self",
+          "value": 1,
+          "duration": "until_leave_field"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-GUA-008-SK01",
+          "skill_name": "极境反击",
+          "skill_type": "passive_free",
+          "trigger": "combat_end",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "buff_attack",
+              "target": "self",
+              "value": 1,
+              "duration": "until_leave_field"
+            }
+          ],
+          "condition": {
+            "self_survived_combat": true,
+            "self_attacked": true
+          },
+          "limit": {
+            "max_stacks": 2
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "每场战斗结束时，若自身存活且本场战斗发动过攻击，攻击力永久增益+1，最多叠加2层；撤离时增益清除。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "近卫;成长;持续战"
+  },
+  {
+    "card_id": "OP-GUA-009",
+    "card_name_zh": "史尔特尔",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 6,
+    "hp": 5,
+    "atk": 6,
+    "class": "guard",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": 4,
+    "active_skill_text_zh": "黄昏（消耗 4 SP）：buff_attack",
+    "effect_trigger": "active",
+    "effect_json": {
+      "trigger": "active",
+      "actions": [
+        {
+          "type": "buff_attack",
+          "target": "self",
+          "value": 3,
+          "duration": "this_combat"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-GUA-009-SK01",
+          "skill_name": "黄昏",
+          "skill_type": "active",
+          "trigger": "active",
+          "sp_cost": 4,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "buff_attack",
+              "target": "self",
+              "value": 3,
+              "duration": "this_combat"
+            }
+          ],
+          "target_scope": "self"
+        },
+        {
+          "skill_id": "OP-GUA-009-SK02",
+          "skill_name": "熔火代价",
+          "skill_type": "passive_free",
+          "trigger": "combat_end",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "damage",
+              "target": "self",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "active_skill_used_this_owner_turn": "OP-GUA-009-SK01"
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "主动技能：消耗4SP，本场战斗攻击力+3；本场战斗结束后自身受到1点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "近卫;破盾;高爆发"
+  },
+  {
+    "card_id": "OP-DEF-001",
+    "card_name_zh": "米格鲁",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 3,
+    "cost": 2,
+    "hp": 5,
+    "atk": 1,
+    "class": "defender",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.5,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attacked",
+    "effect_json": {
+      "trigger": "on_attacked",
+      "actions": [
+        {
+          "type": "reduce_incoming_damage",
+          "target": "self",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-DEF-001-SK01",
+          "skill_name": "基础防御",
+          "skill_type": "passive_free",
+          "trigger": "on_attacked",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "reduce_damage",
+              "target": "self",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "self_position": "front"
+          },
+          "limit": {
+            "per_combat": 1
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "位于前位时，每场战斗首次受到的伤害-1。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "重装;防御;低星"
+  },
+  {
+    "card_id": "OP-DEF-002",
+    "card_name_zh": "斑点",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 3,
+    "cost": 2,
+    "hp": 4,
+    "atk": 1,
+    "class": "defender",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.5,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "combat_end",
+    "effect_json": {
+      "trigger": "combat_end",
+      "actions": [
+        {
+          "type": "heal",
+          "target": "lowest_health_friendly_same_lane",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-DEF-002-SK01",
+          "skill_name": "战地照护",
+          "skill_type": "passive_free",
+          "trigger": "combat_end",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "heal",
+              "target": "lowest_health_friendly_same_lane",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "target_is_damaged": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "战斗结束时，治疗同一路生命值最低且受伤的友方干员1点。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "重装;治疗;基础"
+  },
+  {
+    "card_id": "OP-DEF-003",
+    "card_name_zh": "蛇屠箱",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 6,
+    "atk": 2,
+    "class": "defender",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attacked",
+    "effect_json": {
+      "trigger": "on_attacked",
+      "actions": [
+        {
+          "type": "reduce_incoming_damage",
+          "target": "self",
+          "value": 2
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-DEF-003-SK01",
+          "skill_name": "坚守阵线",
+          "skill_type": "passive_free",
+          "trigger": "on_attacked",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "reduce_damage",
+              "target": "self",
+              "value": 2
+            }
+          ],
+          "condition": {
+            "self_position": "front"
+          },
+          "limit": {
+            "per_combat": 1
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "位于前位时，每场战斗首次受到的伤害-1。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "重装;耐久;稳守"
+  },
+  {
+    "card_id": "OP-DEF-004",
+    "card_name_zh": "古米",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 5,
+    "atk": 2,
+    "class": "defender",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_damage_survive",
+    "effect_json": {
+      "trigger": "on_damage_survive",
+      "actions": [
+        {
+          "type": "heal",
+          "target": "lowest_health_friendly_same_lane",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-DEF-004-SK01",
+          "skill_name": "应急治疗",
+          "skill_type": "passive_free",
+          "trigger": "on_damage_survive",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "heal",
+              "target": "lowest_health_friendly_same_lane",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "target_is_damaged": true
+          },
+          "limit": {
+            "per_combat": 1
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "战斗结束时，治疗同一路生命值最低且受伤的友方干员1点。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "重装;治疗;防守"
+  },
+  {
+    "card_id": "OP-DEF-005",
+    "card_name_zh": "泡泡",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 6,
+    "atk": 2,
+    "class": "defender",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "same_lane",
+    "max_sp": 4,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 0,
+    "sp_gain_on_attacked": 1,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attacked",
+    "effect_json": {
+      "trigger": "on_attacked",
+      "actions": [
+        {
+          "type": "reduce_incoming_damage",
+          "target": "self",
+          "value": 2
+        }
+      ],
+      "skill_priority": 80,
+      "skills": [
+        {
+          "skill_id": "OP-DEF-005-SK01",
+          "skill_name": "泡泡防御姿态",
+          "skill_type": "reaction_sp",
+          "trigger": "on_attacked",
+          "sp_cost": 2,
+          "skill_priority": 80,
+          "actions": [
+            {
+              "type": "reduce_damage",
+              "target": "self",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "同路嘲讽。不自然回复SP；受到攻击时获得1SP。受到攻击时若SP不少于2，自动消耗2SP，使本次伤害-2。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "重装;反伤;防守"
+  },
+  {
+    "card_id": "OP-DEF-006",
+    "card_name_zh": "雷蛇",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 4,
+    "hp": 6,
+    "atk": 3,
+    "class": "defender",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 4,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 0,
+    "sp_gain_on_attacked": 1,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attacked",
+    "effect_json": {
+      "trigger": "on_attacked",
+      "actions": [
+        {
+          "type": "damage",
+          "target": "last_attacker",
+          "value": 2
+        }
+      ],
+      "skill_priority": 70,
+      "skills": [
+        {
+          "skill_id": "OP-DEF-006-SK01",
+          "skill_name": "电荷反击",
+          "skill_type": "reaction_sp",
+          "trigger": "on_attacked",
+          "sp_cost": 2,
+          "skill_priority": 70,
+          "actions": [
+            {
+              "type": "damage",
+              "target": "last_attacker",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "不自然回复SP。受到攻击时获得1SP；受到攻击时若SP不少于2，自动消耗2SP，对攻击者造成2点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "重装;受击产费;资源"
+  },
+  {
+    "card_id": "OP-DEF-007",
+    "card_name_zh": "临光",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 4,
+    "hp": 7,
+    "atk": 2,
+    "class": "defender",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "gain_shield",
+          "target": "self",
+          "value": 2,
+          "duration": "until_combat_end"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-DEF-007-SK01",
+          "skill_name": "守护誓约",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "shield",
+              "target": "self",
+              "value": 2,
+              "duration": "until_combat_end"
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "部署时，自身获得2点护盾，持续至本场战斗结束。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "重装;护盾;保护"
+  },
+  {
+    "card_id": "OP-DEF-008",
+    "card_name_zh": "塞雷娅",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 5,
+    "hp": 8,
+    "atk": 3,
+    "class": "defender",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 4,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": 3,
+    "active_skill_text_zh": "药物配置（消耗 3 SP）：heal",
+    "effect_trigger": "active",
+    "effect_json": {
+      "trigger": "active",
+      "actions": [
+        {
+          "type": "heal",
+          "target": "all_friendly_same_lane",
+          "value": 2
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-DEF-008-SK01",
+          "skill_name": "药物配置",
+          "skill_type": "active",
+          "trigger": "active",
+          "sp_cost": 3,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "heal",
+              "target": "all_friendly_same_lane",
+              "value": 2
+            }
+          ],
+          "target_scope": "same_lane_friendly"
+        }
+      ]
+    },
+    "rules_text_zh": "主动技能：消耗3SP，治疗同一路所有友方干员各2点HP。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "重装;治疗;续航核心"
+  },
+  {
+    "card_id": "OP-DEF-009",
+    "card_name_zh": "星熊",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 5,
+    "hp": 7,
+    "atk": 4,
+    "class": "defender",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 4,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attacked",
+    "effect_json": {
+      "trigger": "on_attacked",
+      "actions": [
+        {
+          "type": "damage",
+          "target": "last_attacker",
+          "value": 2
+        }
+      ],
+      "skill_priority": 60,
+      "skills": [
+        {
+          "skill_id": "OP-DEF-009-SK01",
+          "skill_name": "荆棘护体",
+          "skill_type": "reaction_sp",
+          "trigger": "on_attacked",
+          "sp_cost": 2,
+          "skill_priority": 60,
+          "actions": [
+            {
+              "type": "damage",
+              "target": "last_attacker",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "受到攻击时，若SP不少于2，自动消耗2SP，对攻击者造成2点伤害。自然回复SP为1。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "重装;反伤;前排核心"
+  },
+  {
+    "card_id": "OP-SNI-001",
+    "card_name_zh": "克洛丝",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 3,
+    "cost": 2,
+    "hp": 3,
+    "atk": 2,
+    "class": "sniper",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.5,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_declared",
+    "effect_json": {
+      "trigger": "on_attack_declared",
+      "actions": [
+        {
+          "type": "bonus_damage",
+          "target": "attack_target",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SNI-001-SK01",
+          "skill_name": "精准补射",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_declared",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "bonus_damage",
+              "target": "attack_target",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "target_current_hp_lte": 2
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "攻击当前生命值不高于2的敌方干员时，额外造成1点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "狙击;补刀;低费"
+  },
+  {
+    "card_id": "OP-SNI-002",
+    "card_name_zh": "杰西卡",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 2,
+    "hp": 3,
+    "atk": 2,
+    "class": "sniper",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.5,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "turn_start",
+    "effect_json": {
+      "trigger": "turn_start",
+      "actions": [
+        {
+          "type": "gain_shield",
+          "target": "self",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SNI-002-SK01",
+          "skill_name": "孤立防护",
+          "skill_type": "passive_free",
+          "trigger": "turn_start",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "shield",
+              "target": "self",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "no_other_friendly_same_lane": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "己方回合开始时，若同一路没有其他友方干员，自身获得1点护盾。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "狙击;独立作战;防守"
+  },
+  {
+    "card_id": "OP-SNI-003",
+    "card_name_zh": "流星",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 3,
+    "atk": 3,
+    "class": "sniper",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_declared",
+    "effect_json": {
+      "trigger": "on_attack_declared",
+      "actions": [
+        {
+          "type": "bonus_damage",
+          "target": "attack_target",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SNI-003-SK01",
+          "skill_name": "破盾射击",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_declared",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "bonus_damage",
+              "target": "attack_target",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "target_shield_gte": 1
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "攻击有护盾的敌方干员时，额外造成1点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "狙击;破盾;反制"
+  },
+  {
+    "card_id": "OP-SNI-004",
+    "card_name_zh": "梅",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 4,
+    "atk": 2,
+    "class": "sniper",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_resolved",
+    "effect_json": {
+      "trigger": "on_attack_resolved",
+      "actions": [
+        {
+          "type": "apply_status",
+          "target": "attack_target",
+          "value": 1,
+          "status": "slow",
+          "duration": "until_end_of_target_next_turn"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SNI-004-SK01",
+          "skill_name": "减速弹",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_resolved",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "apply_status",
+              "target": "attack_target",
+              "value": 1,
+              "status": "slow",
+              "duration": "until_end_of_target_next_turn"
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "攻击后使目标减速：其下一场战斗攻击力-1。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "狙击;控制;补刀"
+  },
+  {
+    "card_id": "OP-SNI-005",
+    "card_name_zh": "白金",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 4,
+    "hp": 5,
+    "atk": 3,
+    "class": "sniper",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "continuous",
+    "effect_json": {
+      "trigger": "continuous",
+      "actions": [
+        {
+          "type": "buff_attack",
+          "target": "self",
+          "value": 1,
+          "duration": "while_in_back"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SNI-005-SK01",
+          "skill_name": "蓄力射击",
+          "skill_type": "passive_free",
+          "trigger": "continuous",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "buff_attack",
+              "target": "self",
+              "value": 1,
+              "duration": "while_in_back"
+            }
+          ],
+          "condition": {
+            "self_position": "back"
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "位于后位时，攻击力+1。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "狙击;后位;输出"
+  },
+  {
+    "card_id": "OP-SNI-006",
+    "card_name_zh": "蓝毒",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 4,
+    "hp": 4,
+    "atk": 3,
+    "class": "sniper",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_resolved",
+    "effect_json": {
+      "trigger": "on_attack_resolved",
+      "actions": [
+        {
+          "type": "damage",
+          "target": "second_enemy_same_lane",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SNI-006-SK01",
+          "skill_name": "毒性溅射",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_resolved",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "damage",
+              "target": "second_enemy_same_lane",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "target_exists": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "攻击后，对同一路另一名敌方干员造成1点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "狙击;持续输出;溅射"
+  },
+  {
+    "card_id": "OP-SNI-007",
+    "card_name_zh": "守林人",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 4,
+    "hp": 4,
+    "atk": 4,
+    "class": "sniper",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_declared",
+    "effect_json": {
+      "trigger": "on_attack_declared",
+      "actions": [
+        {
+          "type": "bonus_damage",
+          "target": "attack_target",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SNI-007-SK01",
+          "skill_name": "暗处狙击",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_declared",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "bonus_damage",
+              "target": "attack_target",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "target_position": "back"
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "普通攻击优先攻击同一路后位干员，可越过前排拦截和嘲讽；攻击后位目标时额外造成1点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "狙击;后排狙杀;反制"
+  },
+  {
+    "card_id": "OP-SNI-008",
+    "card_name_zh": "能天使",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 5,
+    "hp": 5,
+    "atk": 4,
+    "class": "sniper",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": 3,
+    "active_skill_text_zh": "过载连射（消耗 3 SP）：buff_attack",
+    "effect_trigger": "active",
+    "effect_json": {
+      "trigger": "active",
+      "actions": [
+        {
+          "type": "buff_attack",
+          "target": "self",
+          "value": 2,
+          "duration": "this_combat"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SNI-008-SK01",
+          "skill_name": "过载连射",
+          "skill_type": "active",
+          "trigger": "active",
+          "sp_cost": 3,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "buff_attack",
+              "target": "self",
+              "value": 2,
+              "duration": "this_combat"
+            }
+          ],
+          "target_scope": "self"
+        }
+      ]
+    },
+    "rules_text_zh": "主动技能：消耗3SP，自身本场战斗攻击力+2。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "狙击;爆发;补刀"
+  },
+  {
+    "card_id": "OP-SNI-009",
+    "card_name_zh": "黑",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 6,
+    "hp": 5,
+    "atk": 6,
+    "class": "sniper",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_declared",
+    "effect_json": {
+      "trigger": "on_attack_declared",
+      "actions": [
+        {
+          "type": "bonus_damage",
+          "target": "attack_target",
+          "value": 2
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SNI-009-SK01",
+          "skill_name": "重型破甲弹",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_declared",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "bonus_damage",
+              "target": "attack_target",
+              "value": 2
+            }
+          ],
+          "condition": {
+            "target_current_hp_gte": 5
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "攻击当前生命值不低于5的敌方干员时，额外造成2点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "狙击;重目标;狙杀"
+  },
+  {
+    "card_id": "OP-CAS-001",
+    "card_name_zh": "史都华德",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 3,
+    "cost": 2,
+    "hp": 2,
+    "atk": 3,
+    "class": "caster",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.5,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "none",
+    "effect_json": {
+      "trigger": "none",
+      "actions": [],
+      "skill_priority": 0,
+      "skills": []
+    },
+    "rules_text_zh": "优先攻击同一路最大生命值最高的敌方干员。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "术师;反重装;低星"
+  },
+  {
+    "card_id": "OP-CAS-002",
+    "card_name_zh": "炎熔",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 3,
+    "cost": 3,
+    "hp": 3,
+    "atk": 2,
+    "class": "caster",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_resolved",
+    "effect_json": {
+      "trigger": "on_attack_resolved",
+      "actions": [
+        {
+          "type": "damage",
+          "target": "second_enemy_same_lane",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-CAS-002-SK01",
+          "skill_name": "爆破术式",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_resolved",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "damage",
+              "target": "second_enemy_same_lane",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "target_exists": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "攻击后，对同一路另一名敌方干员造成1点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "术师;范围;低星"
+  },
+  {
+    "card_id": "OP-CAS-003",
+    "card_name_zh": "夜烟",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 3,
+    "atk": 3,
+    "class": "caster",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_declared",
+    "effect_json": {
+      "trigger": "on_attack_declared",
+      "actions": [
+        {
+          "type": "bonus_damage",
+          "target": "attack_target",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-CAS-003-SK01",
+          "skill_name": "护盾穿透",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_declared",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "bonus_damage",
+              "target": "attack_target",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "target_shield_gte": 1
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "攻击有护盾的敌方干员时，额外造成1点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "术师;破盾;输出"
+  },
+  {
+    "card_id": "OP-CAS-004",
+    "card_name_zh": "卡达",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 4,
+    "atk": 2,
+    "class": "caster",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_resolved",
+    "effect_json": {
+      "trigger": "on_attack_resolved",
+      "actions": [
+        {
+          "type": "apply_status",
+          "target": "attack_target",
+          "value": 1,
+          "status": "slow",
+          "duration": "until_end_of_target_next_turn"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-CAS-004-SK01",
+          "skill_name": "减速术式",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_resolved",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "apply_status",
+              "target": "attack_target",
+              "value": 1,
+              "status": "slow",
+              "duration": "until_end_of_target_next_turn"
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "攻击后使目标下一场战斗攻击力-1。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "术师;减速;控制"
+  },
+  {
+    "card_id": "OP-CAS-005",
+    "card_name_zh": "远山",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 4,
+    "hp": 3,
+    "atk": 4,
+    "class": "caster",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": 3,
+    "active_skill_text_zh": "荒时之锁（消耗 3 SP）：damage",
+    "effect_trigger": "active",
+    "effect_json": {
+      "trigger": "active",
+      "actions": [
+        {
+          "type": "damage",
+          "target": "all_enemies_same_lane",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-CAS-005-SK01",
+          "skill_name": "荒时之锁",
+          "skill_type": "active",
+          "trigger": "active",
+          "sp_cost": 3,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "damage",
+              "target": "all_enemies_same_lane",
+              "value": 1
+            }
+          ],
+          "target_scope": "same_lane_all_enemies"
+        }
+      ]
+    },
+    "rules_text_zh": "主动技能：消耗3SP，对同一路所有敌方干员各造成1点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "术师;范围;中费"
+  },
+  {
+    "card_id": "OP-CAS-006",
+    "card_name_zh": "阿米娅",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 4,
+    "hp": 4,
+    "atk": 4,
+    "class": "caster",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "continuous",
+    "effect_json": {
+      "trigger": "continuous",
+      "actions": [
+        {
+          "type": "buff_attack",
+          "target": "self",
+          "value": 1,
+          "duration": "while_full_health"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-CAS-006-SK01",
+          "skill_name": "源石技艺",
+          "skill_type": "passive_free",
+          "trigger": "continuous",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "buff_attack",
+              "target": "self",
+              "value": 1,
+              "duration": "while_full_health"
+            }
+          ],
+          "condition": {
+            "self_health_full": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "生命值满时，攻击力+1。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "术师;稳定输出;成长"
+  },
+  {
+    "card_id": "OP-CAS-007",
+    "card_name_zh": "夜魔",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 4,
+    "hp": 5,
+    "atk": 3,
+    "class": "caster",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": 3,
+    "active_skill_text_zh": "噩梦凝视（消耗 3 SP）：apply_status",
+    "effect_trigger": "active",
+    "effect_json": {
+      "trigger": "active",
+      "actions": [
+        {
+          "type": "apply_status",
+          "target": "all_enemies_same_lane",
+          "value": 1,
+          "status": "slow",
+          "duration": "until_end_of_target_next_turn"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-CAS-007-SK01",
+          "skill_name": "噩梦凝视",
+          "skill_type": "active",
+          "trigger": "active",
+          "sp_cost": 3,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "apply_status",
+              "target": "all_enemies_same_lane",
+              "value": 1,
+              "status": "slow",
+              "duration": "until_end_of_target_next_turn"
+            }
+          ],
+          "target_scope": "same_lane_all_enemies"
+        }
+      ]
+    },
+    "rules_text_zh": "主动技能：消耗3SP，使同一路所有敌方干员减速，持续至各目标下一个己方回合结束。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "术师;控制;续战"
+  },
+  {
+    "card_id": "OP-CAS-008",
+    "card_name_zh": "艾雅法拉",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 5,
+    "hp": 5,
+    "atk": 4,
+    "class": "caster",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": 4,
+    "active_skill_text_zh": "火山（消耗 4 SP）：damage",
+    "effect_trigger": "active",
+    "effect_json": {
+      "trigger": "active",
+      "actions": [
+        {
+          "type": "damage",
+          "target": "all_enemies_same_lane",
+          "value": 2
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-CAS-008-SK01",
+          "skill_name": "火山",
+          "skill_type": "active",
+          "trigger": "active",
+          "sp_cost": 4,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "damage",
+              "target": "all_enemies_same_lane",
+              "value": 2
+            }
+          ],
+          "target_scope": "same_lane_all_enemies"
+        }
+      ]
+    },
+    "rules_text_zh": "主动技能：消耗4SP，对同一路所有敌方干员各造成2点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "术师;范围;核心输出"
+  },
+  {
+    "card_id": "OP-CAS-009",
+    "card_name_zh": "伊芙利特",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 5,
+    "hp": 5,
+    "atk": 4,
+    "class": "caster",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_resolved",
+    "effect_json": {
+      "trigger": "on_attack_resolved",
+      "actions": [
+        {
+          "type": "debuff_attack",
+          "target": "all_enemies_same_lane",
+          "value": 1,
+          "duration": "until_end_of_target_next_turn"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-CAS-009-SK01",
+          "skill_name": "熔岩压制",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_resolved",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "debuff_attack",
+              "target": "all_enemies_same_lane",
+              "value": 1,
+              "duration": "until_end_of_target_next_turn"
+            }
+          ],
+          "limit": {
+            "per_combat": 1
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "攻击后，使同一路所有敌方干员下一场战斗攻击力-1。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "术师;压制;路线控制"
+  },
+  {
+    "card_id": "OP-MED-001",
+    "card_name_zh": "安赛尔",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 3,
+    "cost": 2,
+    "hp": 3,
+    "atk": 1,
+    "class": "medic",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.5,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "combat_end",
+    "effect_json": {
+      "trigger": "combat_end",
+      "actions": [
+        {
+          "type": "heal",
+          "target": "front_friendly_same_lane",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-MED-001-SK01",
+          "skill_name": "单体治疗",
+          "skill_type": "passive_free",
+          "trigger": "combat_end",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "heal",
+              "target": "front_friendly_same_lane",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "target_is_damaged": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "战斗结束时，治疗同一路前位受伤友方干员1点生命。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "医疗;基础治疗;低星"
+  },
+  {
+    "card_id": "OP-MED-002",
+    "card_name_zh": "芙蓉",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 3,
+    "cost": 2,
+    "hp": 3,
+    "atk": 1,
+    "class": "medic",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.5,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "combat_end",
+    "effect_json": {
+      "trigger": "combat_end",
+      "actions": [
+        {
+          "type": "heal",
+          "target": "lowest_health_friendly_same_lane",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-MED-002-SK01",
+          "skill_name": "应急治疗",
+          "skill_type": "passive_free",
+          "trigger": "combat_end",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "heal",
+              "target": "lowest_health_friendly_same_lane",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "target_is_damaged": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "战斗结束时，治疗同一路生命值最低的受伤友方干员1点。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "医疗;基础治疗;低星"
+  },
+  {
+    "card_id": "OP-MED-003",
+    "card_name_zh": "调香师",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 4,
+    "atk": 1,
+    "class": "medic",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "combat_end",
+    "effect_json": {
+      "trigger": "combat_end",
+      "actions": [
+        {
+          "type": "heal",
+          "target": "all_friendly_same_lane",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-MED-003-SK01",
+          "skill_name": "群体治疗",
+          "skill_type": "passive_free",
+          "trigger": "combat_end",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "heal",
+              "target": "all_friendly_same_lane",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "any_ally_damaged": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "战斗结束时，治疗同一路所有友方干员各1点生命。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "医疗;群体治疗;续航"
+  },
+  {
+    "card_id": "OP-MED-004",
+    "card_name_zh": "嘉维尔",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 4,
+    "atk": 1,
+    "class": "medic",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "turn_start",
+    "effect_json": {
+      "trigger": "turn_start",
+      "actions": [
+        {
+          "type": "heal",
+          "target": "front_friendly_same_lane",
+          "value": 2
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-MED-004-SK01",
+          "skill_name": "快速治疗",
+          "skill_type": "passive_free",
+          "trigger": "turn_start",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "heal",
+              "target": "front_friendly_same_lane",
+              "value": 2
+            }
+          ],
+          "condition": {
+            "target_is_damaged": true
+          },
+          "limit": {
+            "per_owner_turn": 1
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "战斗开始时，治疗同一路前位受伤友方干员2点；每回合限一次。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "医疗;前排治疗;保线"
+  },
+  {
+    "card_id": "OP-MED-005",
+    "card_name_zh": "苏苏洛",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 3,
+    "atk": 1,
+    "class": "medic",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": 3,
+    "active_skill_text_zh": "急救专注（消耗 3 SP）：heal",
+    "effect_trigger": "active",
+    "effect_json": {
+      "trigger": "active",
+      "actions": [
+        {
+          "type": "heal",
+          "target": "chosen_friendly",
+          "value": 4
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-MED-005-SK01",
+          "skill_name": "急救专注",
+          "skill_type": "active",
+          "trigger": "active",
+          "sp_cost": 3,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "heal",
+              "target": "chosen_friendly",
+              "value": 4
+            }
+          ],
+          "limit": {
+            "per_owner_turn": 1
+          },
+          "target_scope": "any_friendly"
+        }
+      ]
+    },
+    "rules_text_zh": "主动技能：消耗3SP，治疗一名友方干员4点HP；每个己方回合限一次。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "医疗;单体爆发治疗"
+  },
+  {
+    "card_id": "OP-MED-006",
+    "card_name_zh": "赫默",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 4,
+    "hp": 4,
+    "atk": 2,
+    "class": "medic",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "gain_shield",
+          "target": "lowest_health_friendly_same_lane",
+          "value": 2
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-MED-006-SK01",
+          "skill_name": "医疗无人机支援",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "shield",
+              "target": "lowest_health_friendly_same_lane",
+              "value": 2
+            }
+          ],
+          "condition": {
+            "target_is_damaged": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "部署时，为同一路生命值最低且受伤的友方干员提供2点护盾；若没有受伤目标则不触发。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "医疗;护盾;救急"
+  },
+  {
+    "card_id": "OP-MED-007",
+    "card_name_zh": "华法琳",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 4,
+    "hp": 4,
+    "atk": 2,
+    "class": "medic",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_ally_death",
+    "effect_json": {
+      "trigger": "on_ally_death",
+      "actions": [
+        {
+          "type": "buff_attack",
+          "target": "random_friendly_same_lane",
+          "value": 1,
+          "duration": "this_combat"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-MED-007-SK01",
+          "skill_name": "血液样本",
+          "skill_type": "passive_free",
+          "trigger": "on_ally_death",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "buff_attack",
+              "target": "random_friendly_same_lane",
+              "value": 1,
+              "duration": "this_combat"
+            }
+          ],
+          "limit": {
+            "per_owner_turn": 1
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "同一路友方干员阵亡时，使另一名随机友方干员本场战斗攻击力+1；每回合限一次。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "医疗;牺牲联动;攻击增益"
+  },
+  {
+    "card_id": "OP-MED-008",
+    "card_name_zh": "闪灵",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 5,
+    "hp": 6,
+    "atk": 2,
+    "class": "medic",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "turn_start",
+    "effect_json": {
+      "trigger": "turn_start",
+      "actions": [
+        {
+          "type": "gain_shield",
+          "target": "front_friendly_same_lane",
+          "value": 2
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-MED-008-SK01",
+          "skill_name": "坚韧屏障",
+          "skill_type": "passive_free",
+          "trigger": "turn_start",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "shield",
+              "target": "front_friendly_same_lane",
+              "value": 2
+            }
+          ],
+          "condition": {
+            "target_exists": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "每场战斗开始时，为同一路前位友方干员提供2点护盾。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "医疗;护盾;强防守"
+  },
+  {
+    "card_id": "OP-MED-009",
+    "card_name_zh": "夜莺",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 5,
+    "hp": 6,
+    "atk": 2,
+    "class": "medic",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "turn_start",
+    "effect_json": {
+      "trigger": "turn_start",
+      "actions": [
+        {
+          "type": "gain_shield",
+          "target": "all_friendly_same_lane",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-MED-009-SK01",
+          "skill_name": "法术屏障",
+          "skill_type": "passive_free",
+          "trigger": "turn_start",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "shield",
+              "target": "all_friendly_same_lane",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "any_ally_exists": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "每场战斗开始时，为同一路所有友方干员各提供1点护盾。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "医疗;群体保护;续航核心"
+  },
+  {
+    "card_id": "OP-SUP-001",
+    "card_name_zh": "梓兰",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 3,
+    "cost": 2,
+    "hp": 3,
+    "atk": 1,
+    "class": "supporter",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.5,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_resolved",
+    "effect_json": {
+      "trigger": "on_attack_resolved",
+      "actions": [
+        {
+          "type": "apply_status",
+          "target": "attack_target",
+          "value": 1,
+          "status": "slow",
+          "duration": "until_end_of_target_next_turn"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SUP-001-SK01",
+          "skill_name": "减速力场",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_resolved",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "apply_status",
+              "target": "attack_target",
+              "value": 1,
+              "status": "slow",
+              "duration": "until_end_of_target_next_turn"
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "攻击后使目标下一场战斗攻击力-1。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "辅助;减速;低星"
+  },
+  {
+    "card_id": "OP-SUP-002",
+    "card_name_zh": "波登可",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 3,
+    "atk": 2,
+    "class": "supporter",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "apply_status",
+          "target": "enemy_front_same_lane",
+          "value": 1,
+          "status": "silence",
+          "duration": "until_end_of_target_next_turn"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SUP-002-SK01",
+          "skill_name": "沉默药剂",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "apply_status",
+              "target": "enemy_front_same_lane",
+              "value": 1,
+              "status": "silence",
+              "duration": "until_end_of_target_next_turn"
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "部署时使同一路敌方前位干员沉默，持续至该目标下一个己方回合结束；沉默期间不能触发任何技能效果，但仍可正常获得SP。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "辅助;部署控制;减速"
+  },
+  {
+    "card_id": "OP-SUP-003",
+    "card_name_zh": "地灵",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 4,
+    "atk": 1,
+    "class": "supporter",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_declared",
+    "effect_json": {
+      "trigger": "on_attack_declared",
+      "actions": [
+        {
+          "type": "bonus_damage",
+          "target": "attack_target",
+          "value": 2
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SUP-003-SK01",
+          "skill_name": "减速追击",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_declared",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "bonus_damage",
+              "target": "attack_target",
+              "value": 2
+            }
+          ],
+          "condition": {
+            "target_has_status": "slow"
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "攻击减速中的敌方干员时，额外造成2点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "辅助;减速联动;补刀"
+  },
+  {
+    "card_id": "OP-SUP-004",
+    "card_name_zh": "真理",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 3,
+    "hp": 4,
+    "atk": 2,
+    "class": "supporter",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": 3,
+    "active_skill_text_zh": "束缚之术（消耗 3 SP）：apply_status",
+    "effect_trigger": "active",
+    "effect_json": {
+      "trigger": "active",
+      "actions": [
+        {
+          "type": "apply_status",
+          "target": "chosen_enemy_same_lane",
+          "value": 1,
+          "status": "stun",
+          "duration": "until_end_of_target_next_turn"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SUP-004-SK01",
+          "skill_name": "束缚之术",
+          "skill_type": "active",
+          "trigger": "active",
+          "sp_cost": 3,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "apply_status",
+              "target": "chosen_enemy_same_lane",
+              "value": 1,
+              "status": "stun",
+              "duration": "until_end_of_target_next_turn"
+            }
+          ],
+          "condition": {
+            "target_has_status": "slow"
+          },
+          "target_scope": "same_lane_enemy"
+        }
+      ]
+    },
+    "rules_text_zh": "主动技能：消耗3SP，对同一路已减速的敌方干员施加眩晕，持续至目标下一个己方回合结束。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "辅助;控制;中费"
+  },
+  {
+    "card_id": "OP-SUP-005",
+    "card_name_zh": "初雪",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 4,
+    "hp": 4,
+    "atk": 2,
+    "class": "supporter",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "debuff_attack",
+          "target": "enemy_front_same_lane",
+          "value": 1,
+          "duration": "until_end_of_target_next_turn"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SUP-005-SK01",
+          "skill_name": "弱化诅咒",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "debuff_attack",
+              "target": "enemy_front_same_lane",
+              "value": 1,
+              "duration": "until_end_of_target_next_turn"
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "部署时，使同一路敌方前位干员本场战斗攻击力-1。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "辅助;削弱;反高攻"
+  },
+  {
+    "card_id": "OP-SUP-006",
+    "card_name_zh": "梅尔",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 4,
+    "hp": 4,
+    "atk": 2,
+    "class": "supporter",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "summon",
+          "target": "back_slot_same_lane",
+          "value": 1,
+          "token_id": "meebo_otter"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SUP-006-SK01",
+          "skill_name": "机械水獭部署",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "summon",
+              "target": "back_slot_same_lane",
+              "value": 1,
+              "token_id": "meebo_otter"
+            }
+          ],
+          "condition": {
+            "back_slot_empty": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "部署时若后位空置，召唤1/2机械水獭占据后位；机械水獭为地面单位。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "辅助;召唤;战线铺展"
+  },
+  {
+    "card_id": "OP-SUP-007",
+    "card_name_zh": "安洁莉娜",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 5,
+    "hp": 4,
+    "atk": 3,
+    "class": "supporter",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": 3,
+    "active_skill_text_zh": "秘杖领域（消耗 3 SP）：heal, apply_status",
+    "effect_trigger": "active",
+    "effect_json": {
+      "trigger": "active",
+      "actions": [
+        {
+          "type": "heal",
+          "target": "lowest_health_friendly_same_lane",
+          "value": 1
+        },
+        {
+          "type": "apply_status",
+          "target": "all_enemies_same_lane",
+          "value": 1,
+          "status": "slow",
+          "duration": "until_end_of_target_next_turn"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SUP-007-SK01",
+          "skill_name": "秘杖领域",
+          "skill_type": "active",
+          "trigger": "active",
+          "sp_cost": 3,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "heal",
+              "target": "lowest_health_friendly_same_lane",
+              "value": 1
+            },
+            {
+              "type": "apply_status",
+              "target": "all_enemies_same_lane",
+              "value": 1,
+              "status": "slow",
+              "duration": "until_end_of_target_next_turn"
+            }
+          ],
+          "target_scope": "same_lane"
+        }
+      ]
+    },
+    "rules_text_zh": "主动技能：消耗3SP，治疗同一路生命值最低的受伤友方干员1点，并使同一路所有敌方干员减速。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "辅助;治疗;控制"
+  },
+  {
+    "card_id": "OP-SUP-008",
+    "card_name_zh": "铃兰",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 5,
+    "hp": 5,
+    "atk": 2,
+    "class": "supporter",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_friendly_attack_declared",
+    "effect_json": {
+      "trigger": "on_friendly_attack_declared",
+      "actions": [
+        {
+          "type": "bonus_damage",
+          "target": "attack_target",
+          "value": 1
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SUP-008-SK01",
+          "skill_name": "狐火协同",
+          "skill_type": "passive_free",
+          "trigger": "on_friendly_attack_declared",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "bonus_damage",
+              "target": "attack_target",
+              "value": 1
+            }
+          ],
+          "condition": {
+            "attacker_same_lane_as_self": true,
+            "target_has_status": "slow"
+          },
+          "target_scope": "same_lane_friendly_attack"
+        }
+      ]
+    },
+    "rules_text_zh": "同一路友方干员攻击减速中的敌方干员时，额外造成1点伤害。此效果为持续协同光环，不消耗SP。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "辅助;减速联动;易伤"
+  },
+  {
+    "card_id": "OP-SUP-009",
+    "card_name_zh": "麦哲伦",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 5,
+    "hp": 4,
+    "atk": 3,
+    "class": "supporter",
+    "attack_type": "ranged",
+    "deploy_rule": "front_or_back",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 3,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "summon",
+          "target": "back_slot_same_lane",
+          "value": 1,
+          "token_id": "magallan_drone"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SUP-009-SK01",
+          "skill_name": "支援无人机",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "summon",
+              "target": "back_slot_same_lane",
+              "value": 1,
+              "token_id": "magallan_drone"
+            }
+          ],
+          "condition": {
+            "back_slot_empty": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "部署时若后位空置，召唤2/2支援无人机占据后位。无人机为浮空单位：近战不能攻击、不拦截基本分；远程优先攻击。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "辅助;召唤;构筑核心"
+  },
+  {
+    "card_id": "OP-SPE-001",
+    "card_name_zh": "暗索",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 3,
+    "atk": 2,
+    "class": "specialist",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "if_else",
+          "branches": [
+            {
+              "condition": {
+                "all": [
+                  {
+                    "back_slot_empty": true
+                  },
+                  {
+                    "target_is_floating": true
+                  }
+                ]
+              },
+              "actions": [
+                {
+                  "type": "move",
+                  "target": "enemy_front_same_lane",
+                  "value": 1,
+                  "destination": "back"
+                },
+                {
+                  "type": "apply_status",
+                  "target": "moved_target",
+                  "value": 2,
+                  "status": "grounded",
+                  "duration": "target_owner_turns"
+                }
+              ]
+            },
+            {
+              "condition": {
+                "back_slot_empty": true
+              },
+              "actions": [
+                {
+                  "type": "move",
+                  "target": "enemy_front_same_lane",
+                  "value": 1,
+                  "destination": "back"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SPE-001-SK01",
+          "skill_name": "牵引装置",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "if_else",
+              "branches": [
+                {
+                  "condition": {
+                    "all": [
+                      {
+                        "back_slot_empty": true
+                      },
+                      {
+                        "target_is_floating": true
+                      }
+                    ]
+                  },
+                  "actions": [
+                    {
+                      "type": "move",
+                      "target": "enemy_front_same_lane",
+                      "value": 1,
+                      "destination": "back"
+                    },
+                    {
+                      "type": "apply_status",
+                      "target": "moved_target",
+                      "value": 2,
+                      "status": "grounded",
+                      "duration": "target_owner_turns"
+                    }
+                  ]
+                },
+                {
+                  "condition": {
+                    "back_slot_empty": true
+                  },
+                  "actions": [
+                    {
+                      "type": "move",
+                      "target": "enemy_front_same_lane",
+                      "value": 1,
+                      "destination": "back"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "condition": {
+            "enemy_front_exists": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "部署时，若敌方后位空置，将敌方前位干员拉至后位；若目标为浮空，施加落地2个目标方回合。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "特种;拉拽;站位"
+  },
+  {
+    "card_id": "OP-SPE-002",
+    "card_name_zh": "阿消",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 4,
+    "atk": 2,
+    "class": "specialist",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "if_else",
+          "branches": [
+            {
+              "condition": {
+                "all": [
+                  {
+                    "back_slot_empty": true
+                  },
+                  {
+                    "target_is_floating": true
+                  }
+                ]
+              },
+              "actions": [
+                {
+                  "type": "move",
+                  "target": "enemy_front_same_lane",
+                  "value": 1,
+                  "destination": "back"
+                },
+                {
+                  "type": "apply_status",
+                  "target": "moved_target",
+                  "value": 2,
+                  "status": "grounded",
+                  "duration": "target_owner_turns"
+                }
+              ]
+            },
+            {
+              "condition": {
+                "back_slot_empty": true
+              },
+              "actions": [
+                {
+                  "type": "move",
+                  "target": "enemy_front_same_lane",
+                  "value": 1,
+                  "destination": "back"
+                }
+              ]
+            },
+            {
+              "condition": "else",
+              "actions": [
+                {
+                  "type": "apply_status",
+                  "target": "enemy_front_same_lane",
+                  "value": 1,
+                  "status": "slow",
+                  "duration": "until_end_of_target_next_turn"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SPE-002-SK01",
+          "skill_name": "推击装置",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "if_else",
+              "branches": [
+                {
+                  "condition": {
+                    "all": [
+                      {
+                        "back_slot_empty": true
+                      },
+                      {
+                        "target_is_floating": true
+                      }
+                    ]
+                  },
+                  "actions": [
+                    {
+                      "type": "move",
+                      "target": "enemy_front_same_lane",
+                      "value": 1,
+                      "destination": "back"
+                    },
+                    {
+                      "type": "apply_status",
+                      "target": "moved_target",
+                      "value": 2,
+                      "status": "grounded",
+                      "duration": "target_owner_turns"
+                    }
+                  ]
+                },
+                {
+                  "condition": {
+                    "back_slot_empty": true
+                  },
+                  "actions": [
+                    {
+                      "type": "move",
+                      "target": "enemy_front_same_lane",
+                      "value": 1,
+                      "destination": "back"
+                    }
+                  ]
+                },
+                {
+                  "condition": "else",
+                  "actions": [
+                    {
+                      "type": "apply_status",
+                      "target": "enemy_front_same_lane",
+                      "value": 1,
+                      "status": "slow",
+                      "duration": "until_end_of_target_next_turn"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "condition": {
+            "enemy_front_exists": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "部署时：若敌方后位空置，将敌方前位推至后位；若目标浮空，额外落地2个目标方回合。后位被占时改为减速。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "特种;推击;控制"
+  },
+  {
+    "card_id": "OP-SPE-003",
+    "card_name_zh": "砾",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 2,
+    "hp": 4,
+    "atk": 1,
+    "class": "specialist",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 1,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.5,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "gain_shield",
+          "target": "self",
+          "value": 3,
+          "duration": "until_combat_end"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SPE-003-SK01",
+          "skill_name": "快速护卫",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "shield",
+              "target": "self",
+              "value": 3,
+              "duration": "until_combat_end"
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "部署时获得3点护盾，护盾在本场战斗结束时移除。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "特种;快速部署;护盾"
+  },
+  {
+    "card_id": "OP-SPE-004",
+    "card_name_zh": "伊桑",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 4,
+    "atk": 2,
+    "class": "specialist",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_resolved",
+    "effect_json": {
+      "trigger": "on_attack_resolved",
+      "actions": [
+        {
+          "type": "apply_status",
+          "target": "attack_target",
+          "value": 1,
+          "status": "stun",
+          "duration": "until_end_of_target_next_turn"
+        }
+      ],
+      "skill_priority": 40,
+      "skills": [
+        {
+          "skill_id": "OP-SPE-004-SK01",
+          "skill_name": "束缚陷阱",
+          "skill_type": "passive_sp",
+          "trigger": "on_attack_resolved",
+          "sp_cost": 2,
+          "skill_priority": 40,
+          "actions": [
+            {
+              "type": "apply_status",
+              "target": "attack_target",
+              "value": 1,
+              "status": "stun",
+              "duration": "until_end_of_target_next_turn"
+            }
+          ],
+          "condition": {
+            "target_has_status": "slow"
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "攻击已减速的敌方干员时，消耗2SP使其眩晕，持续至目标下一个己方回合结束。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "特种;控制;持续干扰"
+  },
+  {
+    "card_id": "OP-SPE-005",
+    "card_name_zh": "孑",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 4,
+    "cost": 3,
+    "hp": 3,
+    "atk": 3,
+    "class": "specialist",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_kill",
+    "effect_json": {
+      "trigger": "on_kill",
+      "actions": [
+        {
+          "type": "heal",
+          "target": "self",
+          "value": 2
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SPE-005-SK01",
+          "skill_name": "战场补给",
+          "skill_type": "passive_free",
+          "trigger": "on_kill",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "heal",
+              "target": "self",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "击杀敌方干员后，自身恢复2点生命。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "特种;击杀;自我续航"
+  },
+  {
+    "card_id": "OP-SPE-006",
+    "card_name_zh": "狮蝎",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 4,
+    "hp": 5,
+    "atk": 2,
+    "class": "specialist",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_attack_resolved",
+    "effect_json": {
+      "trigger": "on_attack_resolved",
+      "actions": [
+        {
+          "type": "apply_status",
+          "target": "attack_target",
+          "value": 1,
+          "status": "slow",
+          "duration": "until_end_of_target_next_turn"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SPE-006-SK01",
+          "skill_name": "隐匿毒刺",
+          "skill_type": "passive_free",
+          "trigger": "on_attack_resolved",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "apply_status",
+              "target": "attack_target",
+              "value": 1,
+              "status": "slow",
+              "duration": "until_end_of_target_next_turn"
+            }
+          ],
+          "limit": {
+            "per_combat": 1
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "每场战斗首次攻击时，使目标下一场战斗攻击力-1。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "特种;控制;耐久"
+  },
+  {
+    "card_id": "OP-SPE-007",
+    "card_name_zh": "红",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 5,
+    "cost": 3,
+    "hp": 3,
+    "atk": 3,
+    "class": "specialist",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 1,
+    "normal_withdrawal_refund_ratio": 0.333333,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "damage",
+          "target": "enemy_front_same_lane",
+          "value": 2
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SPE-007-SK01",
+          "skill_name": "处决投掷",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "damage",
+              "target": "enemy_front_same_lane",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    "rules_text_zh": "部署时，对同一路敌方前位干员造成2点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "特种;刺杀;部署伤害"
+  },
+  {
+    "card_id": "OP-SPE-008",
+    "card_name_zh": "傀影",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 5,
+    "hp": 4,
+    "atk": 4,
+    "class": "specialist",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "summon",
+          "target": "back_slot_same_lane",
+          "value": 1,
+          "token_id": "phantom_shadow"
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SPE-008-SK01",
+          "skill_name": "影子协同",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "summon",
+              "target": "back_slot_same_lane",
+              "value": 1,
+              "token_id": "phantom_shadow"
+            }
+          ],
+          "condition": {
+            "back_slot_empty": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "部署时，若同一路后位空置，召唤2/2影子占据后位。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "特种;召唤;核心"
+  },
+  {
+    "card_id": "OP-SPE-009",
+    "card_name_zh": "温蒂",
+    "card_type": "operator",
+    "support_subtype": "",
+    "rarity": 6,
+    "cost": 5,
+    "hp": 5,
+    "atk": 3,
+    "class": "specialist",
+    "attack_type": "melee",
+    "deploy_rule": "front_only",
+    "floating": false,
+    "taunt_scope": "none",
+    "max_sp": 5,
+    "starting_sp": 0,
+    "sp_regen_per_turn": 1,
+    "sp_gain_on_attacked": 0,
+    "sp_gain_on_damaged": 0,
+    "sp_gain_on_kill": 1,
+    "redeploy_cd_base": 2,
+    "normal_withdrawal_refund_ratio": 0.25,
+    "active_skill_sp_cost": null,
+    "active_skill_text_zh": "",
+    "effect_trigger": "on_deploy",
+    "effect_json": {
+      "trigger": "on_deploy",
+      "actions": [
+        {
+          "type": "if_else",
+          "branches": [
+            {
+              "condition": {
+                "all": [
+                  {
+                    "back_slot_empty": true
+                  },
+                  {
+                    "target_is_floating": true
+                  }
+                ]
+              },
+              "actions": [
+                {
+                  "type": "move",
+                  "target": "enemy_front_same_lane",
+                  "value": 1,
+                  "destination": "back"
+                },
+                {
+                  "type": "apply_status",
+                  "target": "moved_target",
+                  "value": 2,
+                  "status": "grounded",
+                  "duration": "target_owner_turns"
+                }
+              ]
+            },
+            {
+              "condition": {
+                "back_slot_empty": true
+              },
+              "actions": [
+                {
+                  "type": "move",
+                  "target": "enemy_front_same_lane",
+                  "value": 1,
+                  "destination": "back"
+                }
+              ]
+            },
+            {
+              "condition": "else",
+              "actions": [
+                {
+                  "type": "damage",
+                  "target": "enemy_front_same_lane",
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "skill_priority": 50,
+      "skills": [
+        {
+          "skill_id": "OP-SPE-009-SK01",
+          "skill_name": "水炮推击",
+          "skill_type": "passive_free",
+          "trigger": "on_deploy",
+          "sp_cost": 0,
+          "skill_priority": 50,
+          "actions": [
+            {
+              "type": "if_else",
+              "branches": [
+                {
+                  "condition": {
+                    "all": [
+                      {
+                        "back_slot_empty": true
+                      },
+                      {
+                        "target_is_floating": true
+                      }
+                    ]
+                  },
+                  "actions": [
+                    {
+                      "type": "move",
+                      "target": "enemy_front_same_lane",
+                      "value": 1,
+                      "destination": "back"
+                    },
+                    {
+                      "type": "apply_status",
+                      "target": "moved_target",
+                      "value": 2,
+                      "status": "grounded",
+                      "duration": "target_owner_turns"
+                    }
+                  ]
+                },
+                {
+                  "condition": {
+                    "back_slot_empty": true
+                  },
+                  "actions": [
+                    {
+                      "type": "move",
+                      "target": "enemy_front_same_lane",
+                      "value": 1,
+                      "destination": "back"
+                    }
+                  ]
+                },
+                {
+                  "condition": "else",
+                  "actions": [
+                    {
+                      "type": "damage",
+                      "target": "enemy_front_same_lane",
+                      "value": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "condition": {
+            "enemy_front_exists": true
+          }
+        }
+      ]
+    },
+    "rules_text_zh": "部署时：若敌方后位空置，将敌方前位推至后位（浮空目标落地2个目标方回合）；否则对敌方前位造成2点伤害。",
+    "deck_copy_limit": 2,
+    "synergy_tags": "特种;推击;破阵"
+  },
+  {
     "card_id": "DEMO-OP-001",
     "card_name_zh": "芬",
     "card_type": "operator",

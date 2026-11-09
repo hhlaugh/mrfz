@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { OnlineMatchController, OnlineMatchSnapshot } from '../client/onlineMatchController';
-import { DEMO_DECKS } from '../client/demoData';
+import { getAllAvailableDecks } from '../client/demoData';
 
 interface RoomLobbyViewProps {
   readonly controller: OnlineMatchController;
@@ -192,11 +192,11 @@ export function RoomLobbyView({ controller, snapshot, onBackToTitle }: RoomLobby
             <label>选择牌组：</label>
             {isHost ? (
               <select
-                value={roomState?.host.deckId ?? DEMO_DECKS[0]?.deck_id}
+                value={roomState?.host.deckId ?? getAllAvailableDecks()[0]?.deck_id}
                 disabled={myReady}
                 onChange={(e) => handleSelectDeck(e.target.value)}
               >
-                {DEMO_DECKS.map((d) => (
+                {getAllAvailableDecks().map((d) => (
                   <option key={d.deck_id} value={d.deck_id}>
                     {d.deck_name_zh}
                   </option>
@@ -204,7 +204,7 @@ export function RoomLobbyView({ controller, snapshot, onBackToTitle }: RoomLobby
               </select>
             ) : (
               <span className="deck-display-name">
-                {DEMO_DECKS.find((d) => d.deck_id === roomState?.host.deckId)?.deck_name_zh ?? '尚未选定'}
+                {getAllAvailableDecks().find((d) => d.deck_id === roomState?.host.deckId)?.deck_name_zh ?? '尚未选定'}
               </span>
             )}
           </div>
@@ -228,11 +228,11 @@ export function RoomLobbyView({ controller, snapshot, onBackToTitle }: RoomLobby
                 <label>选择牌组：</label>
                 {isGuest ? (
                   <select
-                    value={roomState?.guest?.deckId ?? DEMO_DECKS[1]?.deck_id ?? DEMO_DECKS[0]?.deck_id}
+                    value={roomState?.guest?.deckId ?? getAllAvailableDecks()[1]?.deck_id ?? getAllAvailableDecks()[0]?.deck_id}
                     disabled={myReady}
                     onChange={(e) => handleSelectDeck(e.target.value)}
                   >
-                    {DEMO_DECKS.map((d) => (
+                    {getAllAvailableDecks().map((d) => (
                       <option key={d.deck_id} value={d.deck_id}>
                         {d.deck_name_zh}
                       </option>
@@ -240,7 +240,7 @@ export function RoomLobbyView({ controller, snapshot, onBackToTitle }: RoomLobby
                   </select>
                 ) : (
                   <span className="deck-display-name">
-                    {DEMO_DECKS.find((d) => d.deck_id === roomState?.guest?.deckId)?.deck_name_zh ?? '尚未选定'}
+                    {getAllAvailableDecks().find((d) => d.deck_id === roomState?.guest?.deckId)?.deck_name_zh ?? '尚未选定'}
                   </span>
                 )}
               </div>

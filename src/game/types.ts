@@ -15,15 +15,18 @@ export type CardType = 'operator' | 'tactic' | 'support';
 export type AttackType = 'melee' | 'ranged';
 export type OperatorClass = 'vanguard' | 'guard' | 'defender' | 'sniper' | 'caster' | 'medic' | 'supporter' | 'specialist';
 export type DeployRule = 'front_only' | 'front_or_back' | 'back_only';
-export type StatusKind = 'stun' | 'freeze' | 'grounded' | 'slow' | 'taunt';
+export type StatusKind = 'stun' | 'freeze' | 'grounded' | 'slow' | 'taunt' | 'silence';
 export type EffectTrigger =
   | 'turn_start' | 'turn_end' | 'on_play' | 'on_deploy' | 'on_attacked' | 'on_damaged'
   | 'on_damage_survive' | 'on_lethal' | 'on_death' | 'on_ally_death' | 'on_kill'
   | 'on_heal' | 'on_leave_field' | 'combat_end' | 'active' | 'passive_free' | 'passive_sp'
-  | 'reaction_sp' | 'none';
+  | 'reaction_sp' | 'none'
+  | 'on_attack_declared' | 'on_attack_resolved' | 'continuous' | 'on_friendly_attack_declared';
 export type EffectActionType =
   | 'gain_cost' | 'reduce_incoming_damage' | 'damage' | 'heal' | 'apply_status'
-  | 'withdraw_operator' | 'attach_equipment' | 'choose_friendly_operator_gain_sp' | 'gain_shield';
+  | 'withdraw_operator' | 'attach_equipment' | 'choose_friendly_operator_gain_sp' | 'gain_shield'
+  | 'reduce_damage' | 'buff_attack' | 'debuff_attack' | 'bonus_damage' | 'shield' | 'prevent_lethal'
+  | 'summon' | 'if_else' | 'gain_sp';
 
 export interface EffectAction {
   readonly type: EffectActionType;

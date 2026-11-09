@@ -8,12 +8,15 @@ export const EFFECT_TRIGGERS: readonly EffectTrigger[] = [
   'turn_start', 'turn_end', 'on_play', 'on_deploy', 'on_attacked', 'on_damaged',
   'on_damage_survive', 'on_lethal', 'on_death', 'on_ally_death', 'on_kill', 'on_heal',
   'on_leave_field', 'combat_end', 'active', 'passive_free', 'passive_sp', 'reaction_sp', 'none',
+  'on_attack_declared', 'on_attack_resolved', 'continuous', 'on_friendly_attack_declared',
 ];
 export const EFFECT_ACTION_TYPES: readonly EffectActionType[] = [
   'gain_cost', 'reduce_incoming_damage', 'damage', 'heal', 'apply_status',
   'withdraw_operator', 'attach_equipment', 'choose_friendly_operator_gain_sp', 'gain_shield',
+  'reduce_damage', 'buff_attack', 'debuff_attack', 'bonus_damage', 'shield', 'prevent_lethal',
+  'summon', 'if_else', 'gain_sp',
 ];
-export const STATUS_KINDS = ['stun', 'freeze', 'grounded', 'slow', 'taunt'] as const;
+export const STATUS_KINDS = ['stun', 'freeze', 'grounded', 'slow', 'taunt', 'silence'] as const;
 
 /** JSON Schema subset for the data contract; cross-record invariants are runtime-validated below. */
 export const cardPoolJsonSchema = {

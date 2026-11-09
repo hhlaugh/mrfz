@@ -451,7 +451,7 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
             <aside className="log-side">
               <details open className="log-details">
                 <summary>战斗日志（{snapshot.logHistory.length}）</summary>
-                <LogView history={snapshot.logHistory} />
+                <LogView history={snapshot.logHistory} state={snapshot.state} />
               </details>
             </aside>
           </div>
