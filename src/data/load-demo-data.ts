@@ -18,10 +18,8 @@ export interface DemoDataLoadResult {
   readonly validCards: readonly CardDefinition[];
 }
 
-const DOCUMENTED_TRIGGER_ENUM = new Set([
-  'turn_start', 'turn_end', 'on_play', 'on_deploy', 'on_attacked', 'on_damaged',
-  'on_damage_survive', 'on_lethal', 'on_death', 'on_ally_death', 'on_kill', 'on_heal',
-  'on_leave_field', 'combat_end', 'active', 'passive_free', 'passive_sp', 'reaction_sp', 'none',
+const DOCUMENTED_TRIGGER_ENUM = new Set<string>([
+  ...EFFECT_TRIGGERS,
 ]);
 const allowedStatuses = new Set<string>(STATUS_KINDS);
 const allowedActionTypes = new Set<string>(EFFECT_ACTION_TYPES);
@@ -151,7 +149,7 @@ function validateCardPool(raw: unknown): { issues: ValidationIssue[]; validCards
       }
     }
     if (typeof entry.effect_trigger === 'string' && !DOCUMENTED_TRIGGER_ENUM.has(entry.effect_trigger)) {
-      issue(issues, 'TRIGGER_ENUM_SPEC_DRIFT', `规则/卡牌数据使用 ${entry.effect_trigger}，但 CARD_FIELDS_v0.7.csv 的 effect_trigger 枚举未列出该值。`, id);
+      issue(issues, 'TRIGGER_ENUM_SPEC_DRIFT', `规则/卡牌数据使用 ${entry.effect_trigger}，未在预定义触发器枚举中列出。`, id, 'warning');
     }
     const hasError = issues.slice(before).some((item) => item.severity === 'error');
     if (!hasError && effectValid) validCards.push(entry as unknown as CardDefinition);

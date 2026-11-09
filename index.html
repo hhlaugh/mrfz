@@ -15,14 +15,19 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script type="module">
+    <script>
       // GitHub Pages static fallback:
       // When hosted on GitHub Pages static web server without Vite runtime,
       // load the bundled assets/index.js if /src/main.tsx was not transpiled.
-      if (!window.__MRFZ_LOADED__) {
-        const fallbackScript = './assets/index.js';
-        import(/* @vite-ignore */ fallbackScript).catch(console.error);
-      }
+      window.addEventListener('DOMContentLoaded', function () {
+        if (!window.__MRFZ_LOADED__) {
+          var tag = document.createElement('script');
+          tag.type = 'module';
+          tag.crossOrigin = 'anonymous';
+          tag.src = './assets/index.js';
+          document.body.appendChild(tag);
+        }
+      });
     </script>
   </body>
 </html>
