@@ -45,6 +45,7 @@ export function enumerateLegalActions(state: GameState, playerId: PlayerId): rea
   for (const unit of boardUnits) {
     if (unit.controller_id !== playerId) continue;
     candidates.push({ type: 'withdraw_operator', card_instance_id: unit.card_instance_id });
+    candidates.push({ type: 'activate_skill', card_instance_id: unit.card_instance_id });
     for (const target of boardUnits) candidates.push({ type: 'activate_skill', card_instance_id: unit.card_instance_id, target_instance_id: target.card_instance_id });
   }
   return candidates.filter((action) => isLegal(state, playerId, action));

@@ -282,16 +282,132 @@ function deploymentPositionAllowed(definition: CardDefinition, position: 'front'
   return true;
 }
 
-function validateOnDeployEffects(definition: CardDefinition): { readonly gainCost: number; readonly error?: string } {
+function validateOnDeployEffects(definition: CardDefinition): { readonly gainCost: number } {
   if (definition.effect_trigger !== 'on_deploy') return { gainCost: 0 };
   let gainCost = 0;
   for (const effect of definition.effect_json.actions) {
-    if (effect.type !== 'gain_cost' || effect.target !== 'owner' || !Number.isInteger(effect.value) || (effect.value as number) < 0) {
-      return { gainCost: 0, error: `on_deploy 效果 ${effect.type} 尚未由阶段 3 reducer 实现。` };
+    if (effect.type === 'gain_cost' && effect.target === 'owner' && typeof effect.value === 'number' && effect.value > 0) {
+      gainCost += effect.value;
     }
-    gainCost += effect.value as number;
   }
   return { gainCost };
+}
+
+function applyOnDeployEffects(state: GameState, actorId: PlayerId, deployedId: CardInstanceId, definition: CardDefinition): GameState {
+  if (definition.effect_trigger !== 'on_deploy') return state;
+  let next = state;
+  const deployed = next.card_instances[deployedId];
+  if (!deployed || !deployed.lane) return next;
+  const currentLane = deployed.lane;
+
+  const actions = definition.effect_json?.actions ?? [];
+  for (const action of actions) {
+    if (action.type === 'gain_sp') {
+      const val = typeof action.value === 'number' ? action.value : 0;
+      if (val > 0) {
+        next = grantSp(next, deployedId, val, `${definition.card_name_zh} 部署技能`);
+      }
+    } else if (action.type === 'gain_shield') {
+      const val = typeof action.value === 'number' ? action.value : 0;
+      if (val > 0) {
+        const inst = next.card_instances[deployedId];
+        if (inst?.operator_combat) {
+          next = setInstances(next, {
+            [deployedId]: {
+              ...inst,
+              operator_combat: {
+                ...inst.operator_combat,
+                shield: inst.operator_combat.shield + val,
+              },
+            },
+          });
+        }
+      }
+    } else if (action.type === 'buff_attack') {
+      // 极境: 使同一路友方远程干员本场战斗攻击力+1
+      const val = typeof action.value === 'number' ? action.value : 0;
+      if (val > 0) {
+        const targetType = action.target;
+        const updates: Record<CardInstanceId, CardInstance> = {};
+        for (const [id, unit] of Object.entries(next.card_instances) as [CardInstanceId, CardInstance][]) {
+          if (unit.zone !== 'board' || unit.controller_id !== actorId || !unit.operator_combat) continue;
+          const uDef = findCardDefinition(next, unit.card_id);
+          const sameLane = unit.lane === currentLane;
+          const isRanged = uDef?.attack_type === 'ranged';
+          const match =
+            targetType === 'self'
+              ? id === deployedId
+              : targetType === 'friendly_ranged_same_lane'
+              ? sameLane && isRanged
+              : sameLane;
+          if (match) {
+            updates[id] = {
+              ...unit,
+              operator_combat: {
+                ...unit.operator_combat,
+                current_atk_modifiers: [...unit.operator_combat.current_atk_modifiers, val],
+              },
+            };
+          }
+        }
+        if (Object.keys(updates).length > 0) {
+          next = setInstances(next, updates);
+        }
+      }
+    } else if (action.type === 'debuff_attack') {
+      // 初雪: 使同一路敌方前位干员本场战斗攻击力-1
+      const val = typeof action.value === 'number' ? action.value : 0;
+      if (val > 0) {
+        const targetType = action.target;
+        const updates: Record<CardInstanceId, CardInstance> = {};
+        for (const [id, unit] of Object.entries(next.card_instances) as [CardInstanceId, CardInstance][]) {
+          if (unit.zone !== 'board' || unit.controller_id === actorId || !unit.operator_combat) continue;
+          const sameLane = unit.lane === currentLane;
+          const isFront = unit.position === 'front';
+          const match =
+            targetType === 'enemy_front_same_lane'
+              ? sameLane && isFront
+              : sameLane;
+          if (match) {
+            updates[id] = {
+              ...unit,
+              operator_combat: {
+                ...unit.operator_combat,
+                current_atk_modifiers: [...unit.operator_combat.current_atk_modifiers, -val],
+              },
+            };
+          }
+        }
+        if (Object.keys(updates).length > 0) {
+          next = setInstances(next, updates);
+        }
+      }
+    } else if (action.type === 'apply_status') {
+      // 德克萨斯: 减速; 波登可: 减速; 红: 眩晕
+      const status = action.status;
+      const duration = typeof action.duration_owner_turns === 'number' ? action.duration_owner_turns : 1;
+      if (status) {
+        const enemy = Object.values(next.card_instances).find(
+          (u) => u.zone === 'board' && u.controller_id !== actorId && u.lane === currentLane && (action.target === 'enemy_front_same_lane' ? u.position === 'front' : true)
+        );
+        if (enemy) {
+          next = applyStatusToInstance(next, enemy.card_instance_id, status as import('./types').StatusKind, duration);
+        }
+      }
+    } else if (action.type === 'damage') {
+      // 红: 部署对同一路前排造成伤害
+      const val = typeof action.value === 'number' ? action.value : 0;
+      if (val > 0) {
+        const enemy = Object.values(next.card_instances).find(
+          (u) => u.zone === 'board' && u.controller_id !== actorId && u.lane === currentLane && u.position === 'front'
+        );
+        if (enemy) {
+          next = applyEffectDamage(next, deployedId, enemy.card_instance_id, val);
+        }
+      }
+    }
+  }
+  return next;
 }
 
 function deployOperator(state: GameState, actorId: PlayerId, cardInstanceId: CardInstanceId, lane: 'left' | 'center' | 'right', position: 'front' | 'back'): EngineResult<GameState> {
@@ -308,7 +424,6 @@ function deployOperator(state: GameState, actorId: PlayerId, cardInstanceId: Car
   const player = state.players[actorId];
   if (player.cost < definition.cost) return { ok: false, value: state, reason: '费用不足。' };
   const onDeploy = validateOnDeployEffects(definition);
-  if (onDeploy.error) return { ok: false, value: state, reason: onDeploy.error };
 
   const nextLifecycle: OperatorLifecycleState = {
     redeploy_cd_remaining: 0,
@@ -332,6 +447,7 @@ function deployOperator(state: GameState, actorId: PlayerId, cardInstanceId: Car
   const nextPlayer = { ...player, hand: remainingHand, cost: nextCost };
   let nextState = setPlayer(state, actorId, nextPlayer);
   nextState = setInstances(nextState, { [cardInstanceId]: deployed });
+  nextState = applyOnDeployEffects(nextState, actorId, cardInstanceId, definition);
   return {
     ok: true,
     value: { ...nextState, state_version: state.state_version + 1 },
@@ -567,16 +683,81 @@ function activateActiveSkill(state: GameState, actorId: PlayerId, sourceId: Card
   if (source.operator_combat.statuses.some(status => status.kind === 'stun' || status.kind === 'freeze')) return { ok: false, value: state, reason: '眩晕或冰冻中的干员不能发动主动技能。' };
   const cost = definition.active_skill_sp_cost;
   if (typeof cost !== 'number' || source.operator_combat.current_sp < cost) return { ok: false, value: state, reason: '主动技能 SP 不足或未配置。' };
-  const action = definition.effect_json.actions.length === 1 ? definition.effect_json.actions[0] : undefined;
+  const action = definition.effect_json.actions.length >= 1 ? definition.effect_json.actions[0] : undefined;
+  if (!action) return { ok: false, value: state, reason: '未配置技能效果。' };
+
   const target = targetId ? state.card_instances[targetId] : undefined;
   const targetDefinition = target ? findCardDefinition(state, target.card_id) : undefined;
-  if (!action || action.type !== 'damage' || action.target !== 'chosen_enemy_same_lane' || typeof source.lane !== 'string' || !targetId || !target || target.zone !== 'board' || target.controller_id === actorId || target.lane !== source.lane || targetDefinition?.card_type !== 'operator' || !target.operator_combat || !Number.isInteger(action.value) || (action.value as number) < 0) return { ok: false, value: state, reason: '主动技能目标或白名单效果不合法。' };
+
   const maxUses = Number(definition.effect_json.uses_per_owner_turn ?? 1);
   const flag = `active_skill_used_turn_${state.players[actorId].turns_taken}`;
   if (source.operator_lifecycle.once_per_game_flags[flag] || !Number.isInteger(maxUses) || maxUses < 1) return { ok: false, value: state, reason: '主动技能本回合使用次数已达上限。' };
-  const afterCost = setInstances(state, { [sourceId]: { ...source, operator_combat: { ...source.operator_combat, current_sp: (source.operator_combat.current_sp - cost) as SpValue }, operator_lifecycle: { ...source.operator_lifecycle, once_per_game_flags: { ...source.operator_lifecycle.once_per_game_flags, [flag]: true } } } });
-  const afterEffect = applyEffectDamage(afterCost, sourceId, targetId, action.value as number);
-  return { ok: true, value: { ...afterEffect, state_version: state.state_version + 1 } };
+
+  const afterCost = setInstances(state, {
+    [sourceId]: {
+      ...source,
+      operator_combat: { ...source.operator_combat, current_sp: (source.operator_combat.current_sp - cost) as SpValue },
+      operator_lifecycle: { ...source.operator_lifecycle, once_per_game_flags: { ...source.operator_lifecycle.once_per_game_flags, [flag]: true } },
+    },
+  });
+
+  if (action.type === 'damage') {
+    if (!targetId || !target || target.zone !== 'board' || target.controller_id === actorId || targetDefinition?.card_type !== 'operator' || !target.operator_combat) {
+      return { ok: false, value: state, reason: '伤害技能目标不合法。' };
+    }
+    const val = typeof action.value === 'number' ? action.value : 0;
+    const afterEffect = applyEffectDamage(afterCost, sourceId, targetId, val);
+    return { ok: true, value: { ...afterEffect, state_version: state.state_version + 1 } };
+  }
+
+  if (action.type === 'buff_attack') {
+    const val = typeof action.value === 'number' ? action.value : 1;
+    const recipientId = targetId && target?.controller_id === actorId ? targetId : sourceId;
+    const recipient = afterCost.card_instances[recipientId];
+    if (recipient?.operator_combat) {
+      const afterEffect = setInstances(afterCost, {
+        [recipientId]: {
+          ...recipient,
+          operator_combat: {
+            ...recipient.operator_combat,
+            current_atk_modifiers: [...recipient.operator_combat.current_atk_modifiers, val],
+          },
+        },
+      });
+      return { ok: true, value: { ...afterEffect, state_version: state.state_version + 1 } };
+    }
+  }
+
+  if (action.type === 'heal') {
+    const recipientId = targetId && target?.controller_id === actorId ? targetId : sourceId;
+    const recipient = afterCost.card_instances[recipientId];
+    const recDef = recipient ? findCardDefinition(afterCost, recipient.card_id) : undefined;
+    if (recipient?.operator_combat && recDef) {
+      const val = typeof action.value === 'number' ? action.value : 2;
+      const maxHp = recDef.hp ?? recipient.operator_combat.current_hp;
+      const actualHeal = Math.min(val, maxHp - recipient.operator_combat.current_hp);
+      const afterEffect = setInstances(afterCost, {
+        [recipientId]: {
+          ...recipient,
+          operator_combat: {
+            ...recipient.operator_combat,
+            current_hp: (recipient.operator_combat.current_hp + actualHeal) as HpValue,
+          },
+        },
+      });
+      return { ok: true, value: { ...afterEffect, state_version: state.state_version + 1 } };
+    }
+  }
+
+  if (action.type === 'apply_status') {
+    if (targetId && target && target.controller_id !== actorId && action.status) {
+      const duration = typeof action.duration_owner_turns === 'number' ? action.duration_owner_turns : 1;
+      const afterEffect = applyStatusToInstance(afterCost, targetId, action.status as import('./types').StatusKind, duration);
+      return { ok: true, value: { ...afterEffect, state_version: state.state_version + 1 } };
+    }
+  }
+
+  return { ok: true, value: { ...afterCost, state_version: state.state_version + 1 } };
 }
 
 function finishActionPhase(state: GameState): GameState {
