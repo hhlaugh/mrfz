@@ -12,6 +12,7 @@ import {
   type UiCardDefinition,
 } from '../client/demoData';
 import type { CardId, DeckDefinition } from '../game/types';
+import { OperatorPortrait } from '../components/cards/OperatorPortrait';
 
 interface DeckEditorViewProps {
   readonly onBack: () => void;
@@ -608,6 +609,11 @@ export function DeckEditorView({ onBack, initialDeckId }: DeckEditorViewProps) {
           {/* Bottom Card Detail Inspector Bar */}
           {inspectCard && (
             <div className="bg-[#141923] border-t border-[#283244] p-3 flex items-start gap-4 shrink-0">
+              <OperatorPortrait
+                cardId={inspectCard.card_id}
+                variant="avatar"
+                className="w-14 h-16 rounded shrink-0 shadow-md border border-[#2b374a]"
+              />
               <div className="flex flex-col gap-1 w-44 shrink-0">
                 <div className="flex items-center gap-2">
                   <span className="text-amber-400 font-bold text-xs">

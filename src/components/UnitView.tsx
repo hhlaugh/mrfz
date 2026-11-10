@@ -1,6 +1,7 @@
 import type { CardInstance, GameState } from '../game/types';
 import { STATUS_LABEL } from '../client/demoData';
 import { cardDefinitionOf } from './CardView';
+import { OperatorPortrait } from './cards/OperatorPortrait';
 
 export type UnitHighlight = 'none' | 'target' | 'selected';
 
@@ -19,7 +20,7 @@ export function UnitView({ state, instance, highlight, onClick }: UnitViewProps)
   const atk = Math.max(0, (definition.atk ?? 0) + combat.current_atk_modifiers.reduce((sum, modifier) => sum + modifier, 0));
   return (
     <div className={`unit highlight-${highlight}`} onClick={onClick}>
-      <div className="unit-icon">{definition.card_name_zh.slice(0, 1)}</div>
+      <OperatorPortrait cardId={instance.card_id} variant="avatar" className="unit-icon overflow-hidden rounded" />
       <div className="unit-name">
         {definition.card_name_zh}
         {definition.floating && <span className="unit-floating">浮空</span>}
