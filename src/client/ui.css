@@ -1,17 +1,57 @@
 :root {
   color-scheme: dark;
-  --bg: #14171f;
-  --panel: #1d2230;
-  --panel-2: #232a3c;
-  --line: #323b52;
-  --text: #e8ecf5;
-  --muted: #9aa4bd;
-  --accent: #4f8cff;
-  --accent-soft: rgba(79, 140, 255, 0.25);
-  --good: #4cc38a;
-  --warn: #f0b429;
-  --bad: #ef6a6a;
-  font-family: 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+
+  /* PRTS Tactical Terminal 背景层级 */
+  --color-bg-base: #171a1d;       /* 终端底色 (深灰黑，非纯黑) */
+  --color-bg-sub: #20262b;        /* 二级容器、侧栏、卡组抽屉 */
+  --color-bg-panel: #293137;      /* 信息面板、卡牌浮层 */
+  --color-bg-raised: #343d43;     /* 高亮弹出层、悬浮选中 */
+
+  /* PRTS 文字层级 */
+  --color-text-primary: #e8e9e6;   /* 主要高对比文本 */
+  --color-text-secondary: #aab2b5; /* 辅助文字、技能说明、参数 */
+  --color-text-muted: #778187;     /* 非重点编号、修饰标注 */
+
+  /* 功能与强调色 (Arknights 战术黄) */
+  --color-accent: #e5a52b;         /* 明日方舟战术黄 / 关键操作 */
+  --color-accent-hover: #f59e0b;
+  --color-accent-soft: rgba(229, 165, 43, 0.22);
+  --color-ally: #38bdf8;           /* 友方蓝 (Sky Blue / 玩家 A) */
+  --color-enemy: #fb7185;          /* 敌方红 (Rose / 玩家 B) */
+  --color-success: #34d399;        /* 成功 / 就绪 / 治疗 */
+  --color-warning: #fbbf24;        /* 警告 / 费用不足 */
+  --color-danger: #f87171;         /* 危险 / 受击 / 阵亡 */
+
+  /* 结构分割与线条 */
+  --color-border: #4a555b;         /* 面板线框 */
+  --color-border-subtle: #2d353b;  /* 次级细分隔线 */
+
+  /* 稀有度主题色 */
+  --rarity-3: #94a3b8;            /* 3星: 灰蓝/标准干员 */
+  --rarity-4: #a855f7;            /* 4星: 紫色/精英干员 */
+  --rarity-5: #eab308;            /* 5星: 金黄/资深干员 */
+  --rarity-6: #f97316;            /* 6星: 橙红/高级资深干员 */
+
+  /* 战术切角剪裁路径 */
+  --clip-cut-sm: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+  --clip-cut-md: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  --clip-cut-lg: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+
+  /* 既有变量向后兼容映射 */
+  --bg: var(--color-bg-base);
+  --panel: var(--color-bg-sub);
+  --panel-2: var(--color-bg-panel);
+  --line: var(--color-border);
+  --text: var(--color-text-primary);
+  --muted: var(--color-text-secondary);
+  --accent: var(--color-accent);
+  --accent-soft: var(--color-accent-soft);
+  --good: var(--color-success);
+  --warn: var(--color-warning);
+  --bad: var(--color-danger);
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-feature-settings: "tnum" 1;
 }
 
 * { box-sizing: border-box; }
@@ -88,22 +128,20 @@ b { color: #fff; }
 
 .card {
   position: relative;
-  width: 128px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--panel);
-  padding: 8px;
+  width: 132px;
+  min-height: 184px;
+  background: transparent;
   display: flex;
   flex-direction: column;
-  gap: 6px;
   flex-shrink: 0;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .card.interactive { cursor: pointer; }
-.card.interactive:hover { border-color: var(--accent); }
-.card.selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
-.card.checked { border-color: var(--good); box-shadow: 0 0 0 2px rgba(76, 195, 138, 0.3); }
-.card-tactic { background: linear-gradient(180deg, #232a3c, #1d2230); }
-.card-support { background: linear-gradient(180deg, #22303c, #1d2230); }
+.card.interactive:hover { transform: translateY(-4px); }
+.card.selected { z-index: 10; }
+.card.checked { z-index: 5; }
+.card-dimmed { opacity: 0.45; filter: grayscale(0.65); }
+.card-dimmed.interactive { cursor: not-allowed; }
 
 .card-top { display: flex; align-items: center; gap: 6px; }
 .card-cost {

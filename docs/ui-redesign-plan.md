@@ -10,9 +10,9 @@
 | 阶段 | 阶段目标 | 交付物 / 核心改造 | 状态 |
 |---|---|---|---|
 | **Phase 0** | 项目审计与基准建立 | `docs/ui-audit.md`、核验 0.3 节既有模块、基线测试校验 | **已完成** ✅ |
-| **Phase 0.5** | 最低限度数据层准备（UI 前置门槛） | 稳定 Card ID、冻结数据契约、建立 Card Presentation 映射、缺图 fallback、数据契约测试 | **进行中 / 即将完成** ⏳ |
-| **Phase 1** | Design Tokens 与基础 UI 组件 | `tokens.css`、GamePanel、GameButton、Badge、CardFrame (CSS+SVG) | 待执行 |
-| **Phase 2** | 桌面端主要页面与布局 | 战术终端主菜单、Card Library 只读图鉴、卡组编辑页面重构 | 待执行 |
+| **Phase 0.5** | 最低限度数据层准备（UI 前置门槛） | 稳定 Card ID、冻结数据契约、建立 Card Presentation 映射、缺图 fallback、数据契约测试 | **已完成** ✅ |
+| **Phase 1** | Design Tokens 与基础 UI 组件 | 统一设计令牌、Button/Panel/Badge/Modal/Tooltip/BottomSheet/HealthBar/ResourceIndicator、CardFrame (CSS+SVG) | **已完成** ✅ |
+| **Phase 2** | 桌面端主要页面与布局 | 战术终端主菜单、Card Library 只读图鉴、卡组编辑页面重构 | **待开启** ⏳ |
 | **Phase 3** | 移动端独立布局 | 响应式抽屉 BottomSheet、移动端自适应棋盘与触控操作优化 | 待执行 |
 | **Phase 4** | 战斗界面与 HUD 重构 | 顶部 HUD、战术棋盘网格、单位卡、手牌扇形/横滑栏、彩色战斗日志 | 待执行 |
 | **Phase 5** | 交互与部署体验提升 | 部署拖放/点击高亮预览、攻击范围光标提示、快捷撤离交互 | 待执行 |

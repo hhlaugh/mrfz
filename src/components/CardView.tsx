@@ -1,5 +1,6 @@
 import type { CardInstanceId, GameState } from '../game/types';
 import type { UiCardDefinition } from '../client/demoData';
+import { CardFrame } from './cards/CardFrame';
 
 export function cardDefinitionOf(state: GameState, instanceId: CardInstanceId): UiCardDefinition | undefined {
   const instance = state.card_instances[instanceId];
@@ -39,10 +40,6 @@ export function effectSummary(definition: UiCardDefinition): string {
     .join('；');
 }
 
-const CARD_TYPE_LABEL: Readonly<Record<string, string>> = {
-  operator: '干员', tactic: '战术', support: '支援',
-};
-
 interface CardViewProps {
   readonly state: GameState;
   readonly instanceId: CardInstanceId;
@@ -57,42 +54,19 @@ export function CardView({ state, instanceId, selected = false, interactive = fa
   const instance = state.card_instances[instanceId];
   const definition = cardDefinitionOf(state, instanceId);
   if (!instance || !definition) return null;
-  const isOperator = definition.card_type === 'operator';
-  const typeLabel =
-    definition.card_type === 'operator'
-      ? definition.attack_type === 'ranged'
-        ? '干员 · 远程'
-        : '干员 · 近战'
-      : definition.card_type === 'support'
-        ? definition.support_subtype === 'facility'
-          ? '支援 · 设施'
-          : '支援 · 装备'
-        : CARD_TYPE_LABEL[definition.card_type] ?? definition.card_type;
   const cd = instance.operator_lifecycle?.redeploy_cd_remaining ?? 0;
+
   return (
-    <div
-      className={`card card-${definition.card_type}${selected ? ' selected' : ''}${interactive ? ' interactive' : ''}${checked ? ' checked' : ''}${cd > 0 ? ' card-dimmed' : ''}`}
+    <CardFrame
+      cardId={instance.card_id}
+      definition={definition}
+      variant="hand"
+      selected={selected}
+      interactive={interactive}
+      checked={checked}
+      redeployCd={cd}
       onClick={onClick}
-    >
-      <div className="card-top">
-        <span className="card-cost">{definition.cost}</span>
-        <span className="card-name">{definition.card_name_zh}</span>
-        <span className="card-type">{typeLabel}</span>
-      </div>
-      {isOperator && (
-        <div className="card-stats">
-          <span>ATK {definition.atk ?? 0}</span>
-          <span>HP {definition.hp ?? 0}</span>
-          <span>SP {definition.max_sp ?? 5}</span>
-          {definition.floating && <span className="card-floating">浮空</span>}
-        </div>
-      )}
-      <div className="card-effect">{effectSummary(definition)}</div>
-      {definition.card_type !== 'operator' && definition.effect_trigger === 'active' && (
-        <div className="card-skill">主动技能（SP {String(definition.active_skill_sp_cost ?? '—')}）</div>
-      )}
-      {cd > 0 && <div className="card-cd">再部署 CD：{cd}</div>}
-      {selectable && <div className={`card-check${checked ? ' on' : ''}`}>{checked ? '✓' : ''}</div>}
-    </div>
+      className={`card card-${definition.card_type}${selected ? ' selected' : ''}${interactive ? ' interactive' : ''}${checked ? ' checked' : ''}${cd > 0 ? ' card-dimmed' : ''}`}
+    />
   );
 }

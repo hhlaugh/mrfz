@@ -13,6 +13,7 @@ import {
 } from '../client/demoData';
 import type { CardId, DeckDefinition } from '../game/types';
 import { OperatorPortrait } from '../components/cards/OperatorPortrait';
+import { CardFrame } from '../components/cards/CardFrame';
 
 interface DeckEditorViewProps {
   readonly onBack: () => void;
@@ -509,98 +510,32 @@ export function DeckEditorView({ onBack, initialDeckId }: DeckEditorViewProps) {
           </div>
 
           {/* Card Grid */}
-          <div className="flex-1 overflow-y-auto p-3 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 content-start">
+          <div className="flex-1 overflow-y-auto p-3 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 content-start">
             {filteredCards.map((card) => {
               const uiCard = card as UiCardDefinition;
               const inDeckCount = inDeckCardCounts.get(card.card_id) ?? 0;
               const nameCount = inDeckNameCounts.get(uiCard.card_name_zh) ?? 0;
               const isMaxed = inDeckCount >= 2 || nameCount >= 2 || validation.totalCards >= 20;
-              const cardInfo = getCardClassInfo(uiCard);
 
               return (
                 <div
                   key={card.card_id}
-                  className={`relative flex flex-col p-2.5 rounded-lg border transition cursor-pointer select-none ${
-                    inDeckCount > 0
-                      ? 'bg-[#1b2331] border-cyan-500/80 shadow-md ring-1 ring-cyan-500/40'
-                      : 'bg-[#141821] border-[#242e3f] hover:border-[#3d4d68] hover:bg-[#181d28]'
-                  }`}
-                  onClick={() => addCard(card.card_id)}
                   onMouseEnter={() => setInspectCard(uiCard)}
+                  className="h-full flex flex-col"
                 >
-                  {/* Card Header: Rarity & Cost */}
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span
-                      className="text-[10px] font-bold px-1.5 py-0.5 rounded text-white flex items-center gap-1"
-                      style={{ backgroundColor: cardInfo.color }}
-                    >
-                      {cardInfo.label}
-                    </span>
-                    <span className="text-[11px] text-amber-400 font-bold">
-                      {'★'.repeat(uiCard.rarity)}
-                    </span>
-                    <span className="text-xs font-black px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                      ⚡ {uiCard.cost}
-                    </span>
-                  </div>
-
-                  {/* Card Name */}
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-sm text-slate-100 truncate">
-                      {uiCard.card_name_zh}
-                    </span>
-                    {/* In Deck Badge */}
-                    <span
-                      className={`text-[10px] font-bold px-1.5 py-0.2 rounded border ${
-                        inDeckCount === 2
-                          ? 'bg-emerald-950 border-emerald-500 text-emerald-300'
-                          : inDeckCount === 1
-                          ? 'bg-cyan-950 border-cyan-500 text-cyan-300'
-                          : 'bg-slate-900 border-slate-700 text-slate-500'
-                      }`}
-                    >
-                      {inDeckCount} / 2
-                    </span>
-                  </div>
-
-                  {/* Operator Stats */}
-                  {uiCard.card_type === 'operator' ? (
-                    <div className="flex items-center gap-2 text-[11px] text-slate-300 font-mono mb-1.5 bg-[#0e121a] px-1.5 py-0.5 rounded border border-[#202735]">
-                      <span className="text-rose-400 font-bold">⚔ {uiCard.atk}</span>
-                      <span className="text-emerald-400 font-bold">♥ {uiCard.hp}</span>
-                      <span className="text-cyan-400 font-bold">⚡ {uiCard.starting_sp}/{uiCard.max_sp}</span>
-                    </div>
-                  ) : (
-                    <div className="text-[11px] text-purple-300 font-medium mb-1.5 bg-[#181224] px-1.5 py-0.5 rounded border border-purple-900/40">
-                      {uiCard.card_type === 'tactic' ? '战术法术卡' : '后勤支援卡'}
-                    </div>
-                  )}
-
-                  {/* Brief Rules Description */}
-                  <p className="text-[10px] text-slate-400 line-clamp-2 leading-relaxed flex-1">
-                    {uiCard.rules_text_zh || uiCard.active_skill_text_zh || '基础单位'}
-                  </p>
-
-                  {/* Quick Add Button */}
-                  <div className="mt-2 flex items-center justify-between pt-1 border-t border-[#20293a]">
-                    <span className="text-[9px] text-slate-500 font-mono">
-                      {uiCard.card_id}
-                    </span>
-                    <button
-                      className={`px-2 py-0.5 text-xs font-bold rounded transition cursor-pointer ${
-                        isMaxed
-                          ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                          : 'bg-cyan-700 hover:bg-cyan-600 text-white shadow'
-                      }`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        addCard(card.card_id);
-                      }}
-                      disabled={isMaxed}
-                    >
-                      {inDeckCount === 2 ? '已满' : '+ 加入'}
-                    </button>
-                  </div>
+                  <CardFrame
+                    cardId={card.card_id}
+                    definition={uiCard}
+                    variant="deck"
+                    inDeckCount={inDeckCount}
+                    maxInDeckCount={2}
+                    selected={inDeckCount > 0}
+                    disabled={isMaxed && inDeckCount === 0}
+                    onClick={() => addCard(card.card_id)}
+                    onActionClick={() => addCard(card.card_id)}
+                    actionLabel={inDeckCount === 2 ? '已满' : isMaxed ? '超限' : '+ 加入'}
+                    className="flex-1"
+                  />
                 </div>
               );
             })}

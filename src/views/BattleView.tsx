@@ -6,6 +6,7 @@ import { UnitView } from '../components/UnitView';
 import type { UnitHighlight } from '../components/UnitView';
 import { PlayerBar } from '../components/PlayerBar';
 import { LogView } from '../components/LogView';
+import { Button, Badge } from '../components/ui';
 import { enumerateLegalActions } from '../game/legal-actions';
 import type { CardInstance, CardInstanceId, GameAction, LaneId, PlayerId, Position } from '../game/types';
 
@@ -243,15 +244,22 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
             <span className="seed-info">seed {controller?.getSetup().seed ?? 0} · 规则 v{state.rules_version}</span>
           )}
         </div>
-        <div className="battle-header-actions">
+        <div className="battle-header-actions flex items-center gap-2">
           {networkStatus?.isOnline && networkStatus.onLeaveRoom && (
-            <button className="btn" onClick={networkStatus.onLeaveRoom}>
+            <Button variant="secondary" size="sm" onClick={networkStatus.onLeaveRoom}>
               离开对局
-            </button>
+            </Button>
           )}
-          <button className="btn primary" disabled={!isActionPhase || !canAct || networkStatus?.pausedForGuest} onClick={() => dispatch({ type: 'end_action_phase' })}>
-            结束行动阶段
-          </button>
+          <Button
+            variant="primary"
+            size="md"
+            cornerCut
+            disabled={!isActionPhase || !canAct || networkStatus?.pausedForGuest}
+            onClick={() => dispatch({ type: 'end_action_phase' })}
+            className="font-bold tracking-wider"
+          >
+            结束行动阶段 ▶
+          </Button>
         </div>
       </header>
 
@@ -379,10 +387,11 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
 
               {/* 3. 选定单位与直接使用战术操作条 */}
               {selectedInstance && selectedIsOwnBoardUnit && isActionPhase && !hasPending && canAct && (
-                <div className="action-strip">
-                  <span className="action-strip-title">{selectedDefinition?.card_name_zh ?? '干员'}</span>
-                  <button
-                    className="btn"
+                <div className="action-strip flex items-center gap-2 px-3 py-2 bg-[#1a2026] border border-[#3b4652]">
+                  <span className="action-strip-title font-bold text-xs text-white">{selectedDefinition?.card_name_zh ?? '干员'}</span>
+                  <Button
+                    variant="danger"
+                    size="sm"
                     disabled={!selectedUnitActions.canWithdraw}
                     onClick={() => {
                       const action = legal.find(
@@ -393,9 +402,11 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
                     }}
                   >
                     普通撤离
-                  </button>
-                  <button
-                    className="btn"
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    cornerCut
                     disabled={!selectedUnitActions.canSkillDirect && selectedUnitActions.skillTargets.size === 0}
                     onClick={() => {
                       const direct = legal.find(
@@ -406,27 +417,29 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
                     }}
                   >
                     主动技能{selectedUnitActions.skillCost !== null ? `（SP ${selectedUnitActions.skillCost}）` : ''}
-                  </button>
+                  </Button>
                   {!selectedUnitActions.canSkillDirect && selectedUnitActions.skillTargets.size > 0 && (
-                    <span className="hint">点击高亮目标发动技能</span>
+                    <span className="hint text-[11px] text-amber-300">点击高亮目标发动技能</span>
                   )}
-                  {selectedUnitActions.canWithdraw && <span className="hint">普通撤离将按规则退款并进入再部署 CD</span>}
+                  {selectedUnitActions.canWithdraw && <span className="hint text-[11px] text-slate-400">撤离退费并进入 CD</span>}
                 </div>
               )}
 
               {selectedInstance && showHandDirectUse && directPlay && canAct && (
-                <div className="action-strip">
-                  <span className="action-strip-title">{selectedDefinition?.card_name_zh ?? '卡牌'}</span>
-                  <button
-                    className="btn primary"
+                <div className="action-strip flex items-center gap-2 px-3 py-2 bg-[#1a2026] border border-[#3b4652]">
+                  <span className="action-strip-title font-bold text-xs text-white">{selectedDefinition?.card_name_zh ?? '卡牌'}</span>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    cornerCut
                     onClick={() => {
                       const action = selectedPlayActions.find((candidate) => candidate.target_instance_id === undefined);
                       if (action) dispatch(action);
                     }}
                   >
                     直接使用
-                  </button>
-                  {playTargets.size > 0 && <span className="hint">或点击高亮目标使用</span>}
+                  </Button>
+                  {playTargets.size > 0 && <span className="hint text-[11px] text-amber-300">或点击高亮目标使用</span>}
                 </div>
               )}
               {selectedInstance && showHandDirectUse && !directPlay && playTargets.size > 0 && canAct && (
