@@ -55,6 +55,7 @@ export function DeckEditorView({ onBack, initialDeckId }: DeckEditorViewProps) {
   const [statusNotice, setStatusNotice] = useState<string | null>(null);
   const [importJsonText, setImportJsonText] = useState<string>('');
   const [showImportModal, setShowImportModal] = useState(false);
+  const [mobileTab, setMobileTab] = useState<'catalog' | 'deck'>('catalog');
 
   const showNotice = (msg: string) => {
     setStatusNotice(msg);
@@ -415,10 +416,37 @@ export function DeckEditorView({ onBack, initialDeckId }: DeckEditorViewProps) {
         </div>
       )}
 
-      {/* Main Content Area: Split 2/3 Library, 1/3 Current Deck */}
+      {/* Mobile Tab Switcher */}
+      <div className="lg:hidden flex items-center bg-[#151a23] border-b border-[#242d3d] px-3 py-1.5 gap-2 shrink-0">
+        <button
+          type="button"
+          onClick={() => setMobileTab('catalog')}
+          className={`flex-1 py-1.5 text-xs font-bold transition border cursor-pointer ${
+            mobileTab === 'catalog'
+              ? 'bg-cyan-950/80 border-cyan-400 text-cyan-300'
+              : 'bg-[#10131a] border-[#252f3f] text-slate-400'
+          }`}
+        >
+          🗂️ 干员目录 ({filteredCards.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setMobileTab('deck')}
+          className={`flex-1 py-1.5 text-xs font-bold transition border flex items-center justify-center gap-1.5 cursor-pointer ${
+            mobileTab === 'deck'
+              ? 'bg-amber-950/80 border-amber-400 text-amber-300'
+              : 'bg-[#10131a] border-[#252f3f] text-slate-400'
+          }`}
+        >
+          <span>📋 编制卡组 ({validation.totalCards}/20)</span>
+          <span className={`w-2 h-2 rounded-full ${validation.valid ? 'bg-emerald-400' : 'bg-rose-400'}`} />
+        </button>
+      </div>
+
+      {/* Main Content Area: Split 2/3 Library, 1/3 Current Deck (On Desktop), Tabs (On Mobile) */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left 2/3: Card Pool & Filters */}
-        <section className="flex-[3] flex flex-col border-r border-[#242d3d] bg-[#11141a] overflow-hidden">
+        <section className={`flex-[3] flex-col border-r border-[#242d3d] bg-[#11141a] overflow-hidden ${mobileTab !== 'catalog' ? 'hidden lg:flex' : 'flex'}`}>
           {/* Filter Bar */}
           <div className="p-3 bg-[#151a23] border-b border-[#242d3d] flex flex-col gap-2">
             <div className="flex items-center gap-3">
@@ -601,7 +629,7 @@ export function DeckEditorView({ onBack, initialDeckId }: DeckEditorViewProps) {
         </section>
 
         {/* Right 1/3: Current Deck Structure & Management */}
-        <section className="flex-[2] flex flex-col bg-[#141822] overflow-hidden">
+        <section className={`flex-[2] flex-col bg-[#141822] overflow-hidden ${mobileTab !== 'deck' ? 'hidden lg:flex' : 'flex'}`}>
           {/* Deck Header & Analytics */}
           <div className="p-3 bg-[#181d28] border-b border-[#283244] flex flex-col gap-2 shrink-0">
             <div className="flex items-center justify-between">
