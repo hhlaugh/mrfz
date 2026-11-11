@@ -7,7 +7,6 @@ import type { UnitHighlight } from '../components/UnitView';
 import { LogView } from '../components/LogView';
 import { Panel } from '../components/ui/Panel';
 import { Button } from '../components/ui/Button';
-import { Badge } from '../components/ui/Badge';
 import { TacticalBattleHud } from '../components/battle/TacticalBattleHud';
 import { TacticalDetailPanel } from '../components/battle/TacticalDetailPanel';
 import { enumerateLegalActions } from '../game/legal-actions';
@@ -134,17 +133,17 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
     if (!canAct) return;
     const targetId = instance.card_instance_id;
 
-    // 1. 回合开始选择目标 (Pending Choice)
+    // 1. 优先判定是否处于回合开始前抉择模式
     if (hasPending) {
       const pendingAction = pendingResolves.find((candidate) => candidate.target_instance_id === targetId);
       if (pendingAction) {
         dispatch(pendingAction);
-        return;
       }
+      return;
     }
 
-    // 2. 手牌战术卡目标
-    if (playTargets.has(targetId)) {
+    // 2. 判定是否有战术卡或直接效果指向该单位
+    if (selection && playTargets.has(targetId)) {
       const action = selectedPlayActions.find((candidate) => candidate.target_instance_id === targetId);
       if (action) {
         dispatch(action);
@@ -152,8 +151,8 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
       }
     }
 
-    // 3. 干员主动技能目标
-    if (selectedUnitActions.skillTargets.has(targetId)) {
+    // 3. 判定主动技能释放目标
+    if (selection && selectedUnitActions.skillTargets.has(targetId)) {
       const action = legal.find(
         (candidate): candidate is SkillAction =>
           candidate.type === 'activate_skill' && candidate.card_instance_id === selection && candidate.target_instance_id === targetId,
@@ -164,7 +163,7 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
       }
     }
 
-    // 4. 普通检视选中
+    // 4. 普通选中逻辑
     setSelection(selection === targetId ? null : targetId);
   };
 
@@ -180,17 +179,22 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
     const key = `${half}:${lane}:${position}`;
     const instance = boardMap.get(key);
     const isDeployTarget = half === actor && selectedDeployActions.some((action) => action.lane === lane && action.position === position);
-    const posName = position === 'front' ? '前排' : '后排';
+    const isEnemy = half === topPlayer;
+    const posName = isEnemy
+      ? position === 'front' ? '敌前锋' : '敌后排'
+      : position === 'front' ? '我前锋' : '我后卫';
 
     if (!instance) {
       return (
         <div
           key={key}
           onClick={() => onSlotClick(half, lane, position)}
-          className={`relative flex items-center justify-center h-[116px] border transition-all duration-150 select-none ${
+          className={`relative flex items-center justify-center h-[82px] border transition-all duration-150 select-none ${
             isDeployTarget
-              ? 'border-[#e5a52b] bg-amber-500/15 ring-2 ring-[#e5a52b]/50 shadow-[0_0_12px_rgba(229,165,43,0.35)] cursor-pointer animate-pulse'
-              : 'border-dashed border-[#2d3744] bg-[#12161e]/60 hover:border-[#415063] hover:bg-[#161c26]'
+              ? 'border-[#e5a52b] bg-amber-500/20 ring-2 ring-[#e5a52b]/60 shadow-[0_0_12px_rgba(229,165,43,0.4)] cursor-pointer animate-pulse'
+              : isEnemy
+              ? 'border-dashed border-rose-900/40 bg-[#160f12]/50 hover:border-rose-700/60 hover:bg-[#1f1418]'
+              : 'border-dashed border-sky-900/40 bg-[#0d141d]/50 hover:border-sky-700/60 hover:bg-[#131e2b]'
           }`}
           style={{ clipPath: 'polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}
         >
@@ -200,7 +204,7 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
               <span className="text-[10px] font-mono">({posName})</span>
             </div>
           ) : (
-            <span className="text-[11px] font-mono text-slate-500 tracking-wider">
+            <span className={`text-[10px] font-mono tracking-wider ${isEnemy ? 'text-rose-400/60' : 'text-sky-400/60'}`}>
               {posName}
             </span>
           )}
@@ -230,13 +234,9 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
     );
   };
 
-  const isOpponentHand = (playerId: PlayerId) => {
-    return humanPlayer !== null ? playerId !== humanPlayer : playerId !== bottomPlayer;
-  };
-
   return (
-    <div className="flex flex-col h-screen w-full bg-[#11141a] text-[#e8e9e6] font-sans overflow-hidden select-none">
-      {/* 1. 顶部紧凑 HUD (Tactical Terminal Header) */}
+    <div className="flex flex-col h-screen w-full bg-[#0d1016] text-[#e8e9e6] font-sans overflow-hidden select-none">
+      {/* 1. 顶部紧凑双翼 HUD (Tactical Terminal Header) */}
       <TacticalBattleHud
         state={state}
         actor={actor}
@@ -256,16 +256,16 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
 
       {/* 2. 网络中断或回合前待决提示条 */}
       {networkStatus?.pausedForGuest && (
-        <div className="px-4 py-2 bg-amber-950/90 border-b border-amber-500/60 text-amber-300 text-xs flex items-center justify-center gap-2">
+        <div className="px-4 py-1.5 bg-amber-950/90 border-b border-amber-500/60 text-amber-300 text-xs flex items-center justify-center gap-2 shrink-0">
           <span>⏸️ 访客网络已断开，对局已自动暂停，等待重连（宽限期 120 秒）…</span>
         </div>
       )}
 
       {hasPending && (
-        <div className="px-4 py-2 bg-[#1a2332] border-b border-[#3b4c66] flex items-center justify-between text-xs text-slate-200">
+        <div className="px-4 py-1.5 bg-[#1a2332] border-b border-[#3b4c66] flex items-center justify-between text-xs text-slate-200 shrink-0">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-            <span>回合开始支援触发：请选择友方干员充能 SP</span>
+            <span>回合开始支援触发：请点击友方在场干员为其充能 SP</span>
           </div>
           {canSkipPending && canAct && (
             <Button
@@ -279,11 +279,11 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
         </div>
       )}
 
-      {/* 3. 核心三栏桌面工作区 (Desktop 3-Column Layout) */}
+      {/* 3. 核心三栏桌面工作区 (Desktop 3-Column Zero-Scroll Layout) */}
       <div className="flex flex-1 overflow-hidden relative">
         {/* 左栏：可折叠战术日志 (Collapsible Combat Log) */}
         {showLog && (
-          <aside className="w-80 border-r border-[#242e3d] bg-[#141821] flex flex-col shrink-0 overflow-hidden shadow-lg z-20">
+          <aside className="w-80 border-r border-[#242e3d] bg-[#121620] flex flex-col shrink-0 overflow-hidden shadow-lg z-20">
             <Panel
               variant="default"
               title={`战斗日志 (${snapshot.logHistory.length})`}
@@ -302,81 +302,71 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
           </aside>
         )}
 
-        {/* 中栏：战术棋盘主战场 + 手牌区 */}
-        <main className="flex-1 flex flex-col bg-[#0e1117] overflow-hidden min-w-[560px]">
-          {/* 对手简要状态条 (顶栏紧贴敌方战线) */}
-          <div className="px-4 py-1.5 bg-[#141822] border-b border-[#252f3f] flex items-center justify-between text-xs shrink-0">
-            <div className="flex items-center gap-2 font-mono">
-              <Badge variant="enemy">{PLAYER_LABEL[topPlayer]}</Badge>
-              <span className="text-slate-400">
-                敌方战线 · 手牌: <strong>{state.players[topPlayer].hand.length}</strong> 张
-              </span>
-            </div>
-            <div className="flex items-center gap-3 text-xs font-mono">
-              <span className="text-slate-400">基本分: <strong className="text-rose-400">{state.players[topPlayer].base_points}</strong></span>
-              <span className="text-slate-400">可用费用: <strong className="text-amber-400">{state.players[topPlayer].cost} DP</strong></span>
-            </div>
-          </div>
-
-          {/* 中央三路交锋战场 (3-Lanes Combat Battlefield) */}
-          <div className="flex-1 overflow-y-auto p-4 flex flex-col justify-center items-center">
-            <div className="grid grid-cols-3 gap-3 w-full max-w-4xl">
+        {/* 中栏：战术棋盘主战场 + 紧凑手牌区 (完全锁定一屏，绝无上下滚动) */}
+        <main className="flex-1 flex flex-col justify-between bg-[#0a0d12] overflow-hidden min-w-[500px]">
+          {/* 中央三路交锋推演棋盘 */}
+          <div className="flex-1 flex flex-col justify-center items-center px-4 py-1 overflow-hidden">
+            <div className="grid grid-cols-3 gap-2.5 w-full max-w-4xl">
               {LANES.map((lane) => (
                 <div
                   key={lane}
-                  className="flex flex-col bg-[#141820] border border-[#2b3543] overflow-hidden shadow-md"
-                  style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))' }}
+                  className="flex flex-col bg-[#11161f] border border-[#263140] overflow-hidden shadow-md"
+                  style={{ clipPath: 'polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}
                 >
-                  {/* 路口标头 */}
-                  <div className="px-3 py-1.5 bg-[#181d28] border-b border-[#2b3543] flex items-center justify-between text-xs">
-                    <span className="font-bold text-white tracking-wide">{LANE_LABEL[lane]}</span>
+                  {/* 航道路口标头 */}
+                  <div className="px-2.5 py-1 bg-[#151b24] border-b border-[#242f3d] flex items-center justify-between text-xs">
+                    <span className="font-bold text-white tracking-wide text-xs">{LANE_LABEL[lane]}</span>
                     <span className="text-[10px] font-mono text-slate-400">
                       LANE // {lane.toUpperCase()}
                     </span>
                   </div>
 
-                  {/* 敌方半场 (上方后排 + 前排) */}
-                  <div className={`p-2 space-y-2 bg-[#1a1215]/40 border-b border-[#3b242a]/60 ${actor === topPlayer ? 'bg-rose-950/20' : ''}`}>
-                    <div className="space-y-1.5">
-                      {renderSlot(topPlayer, lane, 'back')}
-                      {renderSlot(topPlayer, lane, 'front')}
-                    </div>
+                  {/* 🔴 敌方战区 (上方后排 + 前排) */}
+                  <div className="px-2 py-0.5 bg-rose-950/40 border-b border-rose-900/40 flex items-center justify-between text-[10px] font-mono font-bold text-rose-300">
+                    <span>🔴 敌方部署区</span>
+                    <span className="text-[9px] text-rose-400/80">后排 / 前锋</span>
+                  </div>
+                  <div className={`p-1.5 space-y-1 bg-[#180e12]/60 border-b border-rose-900/30 ${actor === topPlayer ? 'bg-rose-950/20' : ''}`}>
+                    {renderSlot(topPlayer, lane, 'back')}
+                    {renderSlot(topPlayer, lane, 'front')}
                   </div>
 
                   {/* ⚔️ 三路阻挡与交锋核心线 */}
-                  <div className="relative py-2 px-3 bg-[#11141c] border-y border-[#323d4e] flex items-center justify-center gap-2 select-none">
-                    <div className="flex-1 h-[1.5px] bg-gradient-to-r from-transparent via-[#4a5a73] to-transparent" />
-                    <span className="text-[11px] font-mono font-bold text-[#e5a52b] tracking-wider flex items-center gap-1">
+                  <div className="relative py-1 px-2.5 bg-[#0f131a] border-y border-[#2d3848] flex items-center justify-center gap-2 select-none">
+                    <div className="flex-1 h-[1.5px] bg-gradient-to-r from-transparent via-[#45556d] to-transparent" />
+                    <span className="text-[10px] font-mono font-bold text-[#e5a52b] tracking-wider flex items-center gap-1">
                       <span>⚔</span>
-                      <span>交锋线</span>
+                      <span>交锋阻挡线</span>
                     </span>
-                    <div className="flex-1 h-[1.5px] bg-gradient-to-r from-transparent via-[#4a5a73] to-transparent" />
+                    <div className="flex-1 h-[1.5px] bg-gradient-to-r from-transparent via-[#45556d] to-transparent" />
                   </div>
 
-                  {/* 己方半场 (下方前排 + 后排) */}
-                  <div className={`p-2 space-y-2 bg-[#111924]/40 ${actor === bottomPlayer ? 'bg-sky-950/20' : ''}`}>
-                    <div className="space-y-1.5">
-                      {renderSlot(bottomPlayer, lane, 'front')}
-                      {renderSlot(bottomPlayer, lane, 'back')}
-                    </div>
+                  {/* 🔵 己方战区 (下方前排 + 后排) */}
+                  <div className={`p-1.5 space-y-1 bg-[#0b131d]/60 ${actor === bottomPlayer ? 'bg-sky-950/20' : ''}`}>
+                    {renderSlot(bottomPlayer, lane, 'front')}
+                    {renderSlot(bottomPlayer, lane, 'back')}
+                  </div>
+                  <div className="px-2 py-0.5 bg-sky-950/40 border-t border-sky-900/40 flex items-center justify-between text-[10px] font-mono font-bold text-sky-300">
+                    <span>🔵 我方防线</span>
+                    <span className="text-[9px] text-sky-400/80">前锋 / 后卫</span>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* 操作指引横条 (Action Hint Strip) */}
+          {/* 操作提示栏 (若有选中项) */}
           {selectedInstance && (
-            <div className="px-4 py-1.5 bg-[#1b222d] border-t border-[#313f52] flex items-center justify-between text-xs text-amber-300 shrink-0">
+            <div className="px-3 py-1 bg-[#17202b] border-t border-[#293748] flex items-center justify-between text-xs text-amber-300 shrink-0">
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-3 bg-[#e5a52b]" />
                 <span>
                   当前选中: <strong>{selectedDefinition?.card_name_zh}</strong>
                   {selectedInstance.zone === 'hand'
                     ? selectedDeployActions.length > 0
-                      ? ' · 请点击棋盘上黄色高亮格子部署'
-                      : ' · 费用不足或暂无可部署格子'
-                    : ' · 战场在编单位'}
+                      ? ' · 点击棋盘高亮黄色格子部署'
+                      : ' · 费用不足或暂无可部署位置'
+                    : ' · 战场编队单位'}
                 </span>
               </div>
               <Button variant="ghost" size="sm" onClick={() => setSelection(null)} className="text-slate-400 hover:text-white px-2 py-0 text-xs">
@@ -385,27 +375,26 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
             </div>
           )}
 
-          {/* 底部手牌卡牌托盘 (Bottom Hand Dock) */}
-          <div className="bg-[#131720] border-t border-[#293444] p-3 shrink-0 flex flex-col gap-2">
-            <div className="flex items-center justify-between text-xs">
+          {/* 底部紧凑手牌卡牌托盘 (Bottom Compact Hand Dock) */}
+          <div className="bg-[#11151e] border-t border-[#252f3e] p-2 shrink-0 flex flex-col gap-1.5">
+            <div className="flex items-center justify-between text-xs px-1">
               <div className="flex items-center gap-2 font-mono">
-                <Badge variant="ally">{PLAYER_LABEL[bottomPlayer]}</Badge>
-                <span className="text-slate-300">
-                  己方手牌 (<strong>{state.players[bottomPlayer].hand.length}</strong>)
+                <span className="px-1.5 py-0.2 bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-[10px]">
+                  我方战术手牌 ({state.players[bottomPlayer].hand.length})
                 </span>
-                <span className="text-amber-400 font-bold ml-2">
+                <span className="text-amber-400 font-bold text-xs ml-1">
                   可用费用: {state.players[bottomPlayer].cost} / 10 DP
                 </span>
               </div>
-              <span className="text-[11px] font-mono text-slate-400">
+              <span className="text-[10px] font-mono text-slate-400">
                 牌库余量: {state.players[bottomPlayer].deck.length} · 弃牌: {state.players[bottomPlayer].discard.length}
               </span>
             </div>
 
-            {/* Hand Cards Horizontal Scroll Container */}
-            <div className="flex items-center gap-3 overflow-x-auto py-1 px-1 min-h-[196px] content-start">
+            {/* Hand Cards Horizontal Scroll Container (紧凑高度自适应) */}
+            <div className="flex items-center gap-2.5 overflow-x-auto py-1 px-1 min-h-[148px] max-h-[156px] content-start">
               {state.players[bottomPlayer].hand.length === 0 ? (
-                <div className="w-full text-center py-10 text-xs text-slate-500 font-mono">
+                <div className="w-full text-center py-8 text-xs text-slate-500 font-mono">
                   （暂无手牌）
                 </div>
               ) : (
@@ -426,7 +415,7 @@ export function BattleView({ snapshot, controller, onDispatch, humanPlayer = nul
 
         {/* 右栏：单位战术详情与指令操作面板 (Tactical Detail Panel) */}
         {showDetail && (
-          <aside className="w-80 border-l border-[#242e3d] bg-[#141821] flex flex-col shrink-0 overflow-hidden shadow-lg z-20">
+          <aside className="w-80 border-l border-[#242e3d] bg-[#121620] flex flex-col shrink-0 overflow-hidden shadow-lg z-20">
             <TacticalDetailPanel
               state={state}
               selection={selection}

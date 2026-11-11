@@ -124,7 +124,7 @@ export function CardFrame({
   // 尺寸设定
   const sizeClasses = {
     compact: 'w-24 h-36',
-    hand: 'w-28 h-44 sm:w-32 sm:h-48 shrink-0',
+    hand: 'w-26 h-36 sm:w-28 sm:h-38 shrink-0',
     deck: 'w-full min-h-[160px] p-2.5',
     preview: 'w-64 min-h-[340px] p-4',
   }[variant];
@@ -220,7 +220,7 @@ export function CardFrame({
 
         {/* 规则与技能摘要 (非 compact 模式显示) */}
         {variant !== 'compact' && rulesSummary && (
-          <p className="text-[10px] text-slate-300 line-clamp-2 px-1 leading-relaxed opacity-90">
+          <p className={`text-[10px] text-slate-300 px-1 leading-tight opacity-90 ${variant === 'hand' ? 'line-clamp-1' : 'line-clamp-2'}`}>
             {rulesSummary}
           </p>
         )}

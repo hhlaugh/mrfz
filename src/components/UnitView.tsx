@@ -17,9 +17,9 @@ interface UnitViewProps {
 /**
  * 战场棋盘单位组件 (BoardUnit)
  * 严格遵照《UI_REDESIGN.md》Section 4.5 & 5.1-C 规范：
- * - 棋盘单位作为战术核心，仅展示头像、等宽血条、ATK、SP、护盾与状态
- * - 避免堆砌冗长文本，详细技能与属性由右侧 CardDetailPanel 承载
- * - 具有友方/敌方/选中/目标战术高亮
+ * - 紧凑 82px 高度，保证电脑端整个 4 行三路棋盘 100% 完整显示且零滚动条
+ * - 集中展示头像、等宽双色血条（带数值与护盾）、ATK/SP、状态徽章与阵营高亮
+ * - 详细技能、词条与撤离指令由右侧 TacticalDetailPanel 承载
  */
 export function UnitView({ state, instance, highlight, onClick }: UnitViewProps) {
   const definition = cardDefinitionOf(state, instance.card_instance_id);
@@ -41,36 +41,57 @@ export function UnitView({ state, instance, highlight, onClick }: UnitViewProps)
   return (
     <div
       onClick={onClick}
-      className={`group relative flex flex-col justify-between p-2 rounded-sm bg-[#181d24] select-none transition-all duration-150 cursor-pointer overflow-hidden border ${
+      className={`group relative flex flex-col justify-between p-1.5 rounded-sm bg-[#181d24] select-none transition-all duration-150 cursor-pointer overflow-hidden border ${
         isSelected
-          ? 'border-[#e5a52b] ring-2 ring-[#e5a52b]/50 shadow-[0_0_14px_rgba(229,165,43,0.4)] z-20 scale-[1.02]'
+          ? 'border-[#e5a52b] ring-2 ring-[#e5a52b]/50 shadow-[0_0_14px_rgba(229,165,43,0.4)] z-20 scale-[1.01]'
           : isTarget
           ? 'border-[#f59e0b] ring-2 ring-[#f59e0b]/60 shadow-[0_0_12px_rgba(245,158,11,0.5)] animate-pulse z-20'
           : 'border-[#36424e] hover:border-[#526475] hover:bg-[#1e252e]'
-      } w-full h-[116px]`}
+      } w-full h-[82px]`}
     >
-      {/* 顶部：干员头像与名称 */}
-      <div className="flex items-center gap-1.5 w-full overflow-hidden">
-        <OperatorPortrait
-          cardId={instance.card_id}
-          variant="avatar"
-          className="w-7 h-7 shrink-0 rounded-xs border border-slate-700/80 shadow-xs"
-        />
-        <div className="flex flex-col min-w-0 flex-1 leading-tight">
-          <div className="flex items-center gap-1">
+      {/* 顶部：干员头像、名称与状态标 */}
+      <div className="flex items-center justify-between gap-1 w-full overflow-hidden">
+        <div className="flex items-center gap-1.5 min-w-0 flex-1">
+          <OperatorPortrait
+            cardId={instance.card_id}
+            variant="avatar"
+            className="w-5.5 h-5.5 shrink-0 rounded-xs border border-slate-700/80 shadow-xs"
+          />
+          <div className="flex items-center gap-1 min-w-0 flex-1">
             <span className="font-bold text-xs text-white truncate">
               {definition.card_name_zh}
             </span>
             {definition.floating && (
-              <span className="text-[9px] px-1 bg-amber-950/80 text-amber-300 border border-amber-500/40 rounded-none shrink-0">
+              <span className="text-[8px] px-0.5 bg-amber-950/80 text-amber-300 border border-amber-500/40 shrink-0">
                 浮空
               </span>
             )}
           </div>
-          <span className="text-[9px] font-mono text-slate-400 truncate">
+        </div>
+
+        {/* 右上：状态/装备指示或射程类型 */}
+        {hasStatuses ? (
+          <div className="flex items-center gap-0.5 shrink-0">
+            {combat.statuses.map((status) => (
+              <span
+                key={status.kind}
+                title={`${STATUS_LABEL[status.kind] ?? status.kind}${status.remaining_owner_turns > 0 ? ` (${status.remaining_owner_turns}回合)` : ''}`}
+                className="text-[8px] px-1 py-0.2 bg-rose-950 text-rose-300 border border-rose-500/60 font-mono"
+              >
+                {STATUS_LABEL[status.kind] ?? status.kind}
+              </span>
+            ))}
+            {combat.equipment_ids.length > 0 && (
+              <span className="text-[8px] px-1 py-0.2 bg-emerald-950 text-emerald-300 border border-emerald-500/60 font-mono">
+                装
+              </span>
+            )}
+          </div>
+        ) : (
+          <span className="text-[9px] font-mono text-slate-400 shrink-0">
             {definition.attack_type === 'melee' ? '近战' : '远程'}
           </span>
-        </div>
+        )}
       </div>
 
       {/* 中部：等宽生命条与护盾 */}
@@ -85,7 +106,7 @@ export function UnitView({ state, instance, highlight, onClick }: UnitViewProps)
       </div>
 
       {/* 底部：ATK 与 SP 数值条 */}
-      <div className="flex items-center justify-between text-[11px] font-mono px-1 py-0.5 bg-[#12161b] border border-[#2b353f] leading-none">
+      <div className="flex items-center justify-between text-[11px] font-mono px-1.5 py-0.5 bg-[#12161b] border border-[#2b353f] leading-none">
         <span className="text-rose-400 font-bold flex items-center gap-0.5">
           <span className="text-[9px]">⚔</span>
           <span>{atk}</span>
@@ -95,32 +116,6 @@ export function UnitView({ state, instance, highlight, onClick }: UnitViewProps)
           <span>{combat.current_sp}/{definition.max_sp ?? 5}</span>
         </span>
       </div>
-
-      {/* 状态徽章条 */}
-      {hasStatuses && (
-        <div className="flex items-center gap-1 overflow-x-hidden pt-0.5">
-          {combat.statuses.map((status) => (
-            <span
-              key={status.kind}
-              className="text-[9px] font-mono px-1 py-0.2 bg-rose-950/80 text-rose-300 border border-rose-600/50 truncate"
-            >
-              {STATUS_LABEL[status.kind] ?? status.kind}{status.remaining_owner_turns > 0 ? `·${status.remaining_owner_turns}` : ''}
-            </span>
-          ))}
-          {combat.equipment_ids.map((eqId) => {
-            const eqInstance = state.card_instances[eqId];
-            const eqDef = eqInstance ? state.card_definitions[eqInstance.card_id] : undefined;
-            return (
-              <span
-                key={eqId}
-                className="text-[9px] font-mono px-1 py-0.2 bg-emerald-950/80 text-emerald-300 border border-emerald-600/50 truncate"
-              >
-                {eqDef?.card_name_zh ?? '装备'}
-              </span>
-            );
-          })}
-        </div>
-      )}
 
       {/* 目标准星角落装饰 */}
       {isTarget && (
