@@ -1,7 +1,9 @@
+import React from 'react';
 import type { CardInstance, GameState } from '../game/types';
 import { STATUS_LABEL } from '../client/demoData';
 import { cardDefinitionOf } from './CardView';
 import { OperatorPortrait } from './cards/OperatorPortrait';
+import { HealthBar } from './ui/HealthBar';
 
 export type UnitHighlight = 'none' | 'target' | 'selected';
 
@@ -12,42 +14,117 @@ interface UnitViewProps {
   readonly onClick?: () => void;
 }
 
-/** 场上干员：HP/ATK/SP/护盾/状态全部来自引擎状态；ATK 仅做展示汇总，不参与任何结算。 */
+/**
+ * 战场棋盘单位组件 (BoardUnit)
+ * 严格遵照《UI_REDESIGN.md》Section 4.5 & 5.1-C 规范：
+ * - 棋盘单位作为战术核心，仅展示头像、等宽血条、ATK、SP、护盾与状态
+ * - 避免堆砌冗长文本，详细技能与属性由右侧 CardDetailPanel 承载
+ * - 具有友方/敌方/选中/目标战术高亮
+ */
 export function UnitView({ state, instance, highlight, onClick }: UnitViewProps) {
   const definition = cardDefinitionOf(state, instance.card_instance_id);
   const combat = instance.operator_combat;
   if (!definition || !combat) return null;
-  const atk = Math.max(0, (definition.atk ?? 0) + combat.current_atk_modifiers.reduce((sum, modifier) => sum + modifier, 0));
+
+  const atk = Math.max(
+    0,
+    (definition.atk ?? 0) + combat.current_atk_modifiers.reduce((sum, modifier) => sum + modifier, 0),
+  );
+
+  const maxHp = definition.hp ?? 1;
+  const isSelected = highlight === 'selected';
+  const isTarget = highlight === 'target';
+
+  // 状态与装备数量
+  const hasStatuses = combat.statuses.length > 0 || combat.equipment_ids.length > 0;
+
   return (
-    <div className={`unit highlight-${highlight}`} onClick={onClick}>
-      <OperatorPortrait cardId={instance.card_id} variant="avatar" className="unit-icon overflow-hidden rounded" />
-      <div className="unit-name">
-        {definition.card_name_zh}
-        {definition.floating && <span className="unit-floating">浮空</span>}
+    <div
+      onClick={onClick}
+      className={`group relative flex flex-col justify-between p-2 rounded-sm bg-[#181d24] select-none transition-all duration-150 cursor-pointer overflow-hidden border ${
+        isSelected
+          ? 'border-[#e5a52b] ring-2 ring-[#e5a52b]/50 shadow-[0_0_14px_rgba(229,165,43,0.4)] z-20 scale-[1.02]'
+          : isTarget
+          ? 'border-[#f59e0b] ring-2 ring-[#f59e0b]/60 shadow-[0_0_12px_rgba(245,158,11,0.5)] animate-pulse z-20'
+          : 'border-[#36424e] hover:border-[#526475] hover:bg-[#1e252e]'
+      } w-full h-[116px]`}
+    >
+      {/* 顶部：干员头像与名称 */}
+      <div className="flex items-center gap-1.5 w-full overflow-hidden">
+        <OperatorPortrait
+          cardId={instance.card_id}
+          variant="avatar"
+          className="w-7 h-7 shrink-0 rounded-xs border border-slate-700/80 shadow-xs"
+        />
+        <div className="flex flex-col min-w-0 flex-1 leading-tight">
+          <div className="flex items-center gap-1">
+            <span className="font-bold text-xs text-white truncate">
+              {definition.card_name_zh}
+            </span>
+            {definition.floating && (
+              <span className="text-[9px] px-1 bg-amber-950/80 text-amber-300 border border-amber-500/40 rounded-none shrink-0">
+                浮空
+              </span>
+            )}
+          </div>
+          <span className="text-[9px] font-mono text-slate-400 truncate">
+            {definition.attack_type === 'melee' ? '近战' : '远程'}
+          </span>
+        </div>
       </div>
-      <div className="unit-stats">
-        <span className="stat hp">HP {combat.current_hp}/{definition.hp ?? 0}</span>
-        <span className="stat atk">ATK {atk}</span>
-        <span className="stat sp">SP {combat.current_sp}/{definition.max_sp ?? 5}</span>
-        {combat.shield > 0 && <span className="stat shield">盾 {combat.shield}</span>}
+
+      {/* 中部：等宽生命条与护盾 */}
+      <div className="w-full my-0.5">
+        <HealthBar
+          currentHp={combat.current_hp}
+          maxHp={maxHp}
+          shield={combat.shield}
+          size="sm"
+          showNumbers
+        />
       </div>
-      {(combat.statuses.length > 0 || combat.equipment_ids.length > 0) && (
-        <div className="unit-statuses">
+
+      {/* 底部：ATK 与 SP 数值条 */}
+      <div className="flex items-center justify-between text-[11px] font-mono px-1 py-0.5 bg-[#12161b] border border-[#2b353f] leading-none">
+        <span className="text-rose-400 font-bold flex items-center gap-0.5">
+          <span className="text-[9px]">⚔</span>
+          <span>{atk}</span>
+        </span>
+        <span className="text-sky-400 font-bold flex items-center gap-0.5">
+          <span className="text-[9px]">⚡</span>
+          <span>{combat.current_sp}/{definition.max_sp ?? 5}</span>
+        </span>
+      </div>
+
+      {/* 状态徽章条 */}
+      {hasStatuses && (
+        <div className="flex items-center gap-1 overflow-x-hidden pt-0.5">
           {combat.statuses.map((status) => (
-            <span key={status.kind} className={`status status-${status.kind}`}>
-              {STATUS_LABEL[status.kind] ?? status.kind} {status.remaining_owner_turns}
+            <span
+              key={status.kind}
+              className="text-[9px] font-mono px-1 py-0.2 bg-rose-950/80 text-rose-300 border border-rose-600/50 truncate"
+            >
+              {STATUS_LABEL[status.kind] ?? status.kind}{status.remaining_owner_turns > 0 ? `·${status.remaining_owner_turns}` : ''}
             </span>
           ))}
-          {combat.equipment_ids.map((equipmentId) => {
-            const equipment = state.card_instances[equipmentId];
-            const equipmentDefinition = equipment ? state.card_definitions[equipment.card_id] : undefined;
+          {combat.equipment_ids.map((eqId) => {
+            const eqInstance = state.card_instances[eqId];
+            const eqDef = eqInstance ? state.card_definitions[eqInstance.card_id] : undefined;
             return (
-              <span key={equipmentId} className="status status-equipment">
-                {equipmentDefinition?.card_name_zh ?? '装备'}
+              <span
+                key={eqId}
+                className="text-[9px] font-mono px-1 py-0.2 bg-emerald-950/80 text-emerald-300 border border-emerald-600/50 truncate"
+              >
+                {eqDef?.card_name_zh ?? '装备'}
               </span>
             );
           })}
         </div>
+      )}
+
+      {/* 目标准星角落装饰 */}
+      {isTarget && (
+        <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-amber-400 pointer-events-none" />
       )}
     </div>
   );

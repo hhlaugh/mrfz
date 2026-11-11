@@ -8,13 +8,14 @@ import { DEMO_CARDS, getAllAvailableDecks } from './client/demoData';
 import { StartView } from './views/StartView';
 import { DeckSelectView } from './views/DeckSelectView';
 import { DeckEditorView } from './views/DeckEditorView';
+import { CardLibraryView } from './views/CardLibraryView';
 import { MulliganView } from './views/MulliganView';
 import { BattleView } from './views/BattleView';
 import { SettlementView } from './views/SettlementView';
 import { RoomLobbyView } from './views/RoomLobbyView';
 import type { CardInstanceId, DeckDefinition, PlayerId } from './game/types';
 
-type Screen = 'title' | 'deckSelect' | 'game' | 'online' | 'deckEditor';
+type Screen = 'title' | 'deckSelect' | 'game' | 'online' | 'deckEditor' | 'library';
 type Mode = 'hotseat' | 'vs-bot' | 'online';
 
 function randomSeed(): number {
@@ -28,6 +29,15 @@ export function App() {
 
   const onlineController = useMemo(() => new OnlineMatchController(), []);
   const onlineSnapshot = useSyncExternalStore(onlineController.subscribe, onlineController.getSnapshot);
+
+  if (screen === 'library') {
+    return (
+      <CardLibraryView
+        onBack={() => setScreen('title')}
+        onOpenDeckEditor={() => setScreen('deckEditor')}
+      />
+    );
+  }
 
   if (screen === 'deckEditor') {
     return <DeckEditorView onBack={() => setScreen('title')} />;
@@ -50,6 +60,9 @@ export function App() {
         }}
         onDeckEditor={() => {
           setScreen('deckEditor');
+        }}
+        onLibrary={() => {
+          setScreen('library');
         }}
       />
     );

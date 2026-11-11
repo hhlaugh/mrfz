@@ -7,9 +7,21 @@ const loaded = loadDemoData();
 if (loaded.issues.length > 0) throw new Error(`Demo data has validation issues: ${JSON.stringify(loaded.issues)}`);
 const cards = loaded.validCards;
 const cardIds = Object.fromEntries(cards.map((card) => [card.card_id, card.card_id])) as Record<string, CardId>;
+const demoCards = cards.filter((c) => c.card_id.startsWith('DEMO-'));
+const uniqueCards = (() => {
+  const list: typeof cards = [...demoCards];
+  const seen = new Set<string>(demoCards.map((c) => c.card_name_zh));
+  for (const c of cards) {
+    if (!seen.has(c.card_name_zh)) {
+      seen.add(c.card_name_zh);
+      list.push(c);
+    }
+  }
+  return list;
+})();
 const repeatedCardIds = ['DEMO-OP-001', 'DEMO-TAC-005', 'DEMO-SUP-001', 'DEMO-SUP-002'];
 const deckCards = [
-  ...cards.map((card) => ({ card_id: card.card_id, quantity: 1 })),
+  ...uniqueCards.map((card) => ({ card_id: card.card_id, quantity: 1 })),
   ...repeatedCardIds.map((id) => ({ card_id: cardIds[id], quantity: 1 })),
 ];
 

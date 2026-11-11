@@ -12,9 +12,9 @@
 | **Phase 0** | 项目审计与基准建立 | `docs/ui-audit.md`、核验 0.3 节既有模块、基线测试校验 | **已完成** ✅ |
 | **Phase 0.5** | 最低限度数据层准备（UI 前置门槛） | 稳定 Card ID、冻结数据契约、建立 Card Presentation 映射、缺图 fallback、数据契约测试 | **已完成** ✅ |
 | **Phase 1** | Design Tokens 与基础 UI 组件 | 统一设计令牌、Button/Panel/Badge/Modal/Tooltip/BottomSheet/HealthBar/ResourceIndicator、CardFrame (CSS+SVG) | **已完成** ✅ |
-| **Phase 2** | 桌面端主要页面与布局 | 战术终端主菜单、Card Library 只读图鉴、卡组编辑页面重构 | **待开启** ⏳ |
-| **Phase 3** | 移动端独立布局 | 响应式抽屉 BottomSheet、移动端自适应棋盘与触控操作优化 | 待执行 |
-| **Phase 4** | 战斗界面与 HUD 重构 | 顶部 HUD、战术棋盘网格、单位卡、手牌扇形/横滑栏、彩色战斗日志 | 待执行 |
+| **Phase 2** | 桌面端主要页面与布局 | 罗德岛干员档案/只读图鉴（CardLibraryView）、三栏战术桌面战场（BattleView）、紧凑顶部战术 HUD（TacticalBattleHud）、右侧单位档案与指令控制台（TacticalDetailPanel）、折叠彩色战斗日志 | **已完成** ✅ |
+| **Phase 3** | 移动端独立布局 | 响应式抽屉 BottomSheet、移动端自适应棋盘与触控操作优化 | **待开启** ⏳ |
+| **Phase 4** | 卡牌视觉系统与卡组编辑深入优化 | 扇形手牌/横滑栏交互、手牌卡牌精细悬停动效、卡组编辑高级搜索与统计 | 待执行 |
 | **Phase 5** | 交互与部署体验提升 | 部署拖放/点击高亮预览、攻击范围光标提示、快捷撤离交互 | 待执行 |
 | **Phase 6** | 战斗轻量动画与视觉反馈 | 伤害跳字、受击闪烁、技能发动光效、击杀退场动效 | 待执行 |
 | **Phase 7** | 全面回归验收与交付 | 全流程冒烟测试、桌面端与移动端兼容性检查、文档归档 | 待执行 |

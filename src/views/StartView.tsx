@@ -8,9 +8,10 @@ interface StartViewProps {
   readonly onVsBot: () => void;
   readonly onOnline: () => void;
   readonly onDeckEditor: () => void;
+  readonly onLibrary?: () => void;
 }
 
-export function StartView({ onHotseat, onVsBot, onOnline, onDeckEditor }: StartViewProps) {
+export function StartView({ onHotseat, onVsBot, onOnline, onDeckEditor, onLibrary }: StartViewProps) {
   return (
     <div className="min-h-screen w-full bg-[#171a1d] text-[#e8e9e6] flex flex-col items-center justify-center p-4 sm:p-6 select-none">
       {/* Central Terminal Console Panel */}
@@ -59,19 +60,30 @@ export function StartView({ onHotseat, onVsBot, onOnline, onDeckEditor }: StartV
             </p>
           </div>
 
-          {/* Quick Deck Builder Launcher */}
-          <div className="w-full md:w-auto shrink-0 flex flex-col items-center">
+          {/* Quick Deck Builder & Archive Launcher */}
+          <div className="w-full md:w-auto shrink-0 flex flex-col sm:flex-row md:flex-col gap-2 items-center">
             <Button
               variant="outline"
               size="lg"
               cornerCut
               onClick={onDeckEditor}
-              className="w-full md:w-auto font-bold tracking-wide"
+              className="w-full md:w-60 font-bold tracking-wide"
             >
               🎴 卡组构筑器 (Deck Builder)
             </Button>
-            <span className="text-[10px] text-slate-400 font-mono mt-1.5">
-              已载入 88 张卡牌全量图鉴与官方预设
+            {onLibrary && (
+              <Button
+                variant="secondary"
+                size="md"
+                cornerCut
+                onClick={onLibrary}
+                className="w-full md:w-60 font-medium"
+              >
+                📖 罗德岛干员图鉴 (Archive)
+              </Button>
+            )}
+            <span className="text-[10px] text-slate-400 font-mono text-center">
+              全量 88 张卡牌 · 官方预设 · 只读图鉴
             </span>
           </div>
         </div>

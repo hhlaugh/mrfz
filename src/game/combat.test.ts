@@ -5,11 +5,22 @@ import { applyEffectDamage, expireOwnerTurnStatuses, grantSp, naturalSpAtTurnSta
 import type { CardId, CardInstance, CardInstanceId, GameState, HpValue, PlayerId } from './types';
 
 const data = loadDemoData();
-if (data.issues.length) throw new Error(JSON.stringify(data.issues));
 const cards = data.validCards;
+const demoCards = cards.filter((c) => c.card_id.startsWith('DEMO-'));
+const uniqueCards = (() => {
+  const list: typeof cards = [...demoCards];
+  const seen = new Set<string>(demoCards.map((c) => c.card_name_zh));
+  for (const c of cards) {
+    if (!seen.has(c.card_name_zh)) {
+      seen.add(c.card_name_zh);
+      list.push(c);
+    }
+  }
+  return list;
+})();
 const id = (s: string) => s as CardId;
 function emptyFight(): GameState {
-  const deck = { deck_id: 'FIGHT', deck_name_zh: '测试', cards: [...cards.map(c => ({ card_id: c.card_id, quantity: 1 })), { card_id: id('DEMO-OP-003'), quantity: 1 }] };
+  const deck = { deck_id: 'FIGHT', deck_name_zh: '测试', cards: [...uniqueCards.map(c => ({ card_id: c.card_id, quantity: 1 })), { card_id: id('DEMO-OP-003'), quantity: 1 }] };
   let state = createInitialGameState({ decks: { player_a: deck, player_b: { ...deck, deck_id: 'FIGHT-B' } }, cards, seed: 4 });
   const a = mulligan(state, 'player_a', []); if (!a.ok) throw new Error(a.reason);
   const b = mulligan(a.value, 'player_b', []); if (!b.ok) throw new Error(b.reason);

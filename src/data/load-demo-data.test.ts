@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { loadDemoData, summarizeValidation } from './load-demo-data';
 
 describe('loadDemoData', () => {
-  it('loads all 16 source cards and two complete preset decks without changing source records', () => {
+  it('loads all source cards and two complete preset decks without changing source records', () => {
     const result = loadDemoData();
-    expect(result.cards).toHaveLength(16);
+    expect(result.cards).toHaveLength(88);
     expect(result.decks).toHaveLength(2);
     expect(result.decks.map((deck) => deck.cards.reduce((sum, item) => sum + item.quantity, 0))).toEqual([20, 20]);
     expect(result.issues.some((item) => item.code === 'UNKNOWN_EFFECT_ACTION' || item.code === 'UNKNOWN_EFFECT_TRIGGER')).toBe(false);
@@ -13,7 +13,7 @@ describe('loadDemoData', () => {
   it('accepts corrected fields and keeps rapid withdrawal exemptions explicit', () => {
     const result = loadDemoData();
     expect(result.issues).toEqual([]);
-    expect(result.validCards).toHaveLength(16);
+    expect(result.validCards).toHaveLength(88);
     const rapid = result.validCards.find((card) => card.card_id === 'DEMO-TAC-005');
     expect(rapid?.effect_json.actions[0]).toMatchObject({
       ignore_control_restriction: true,
@@ -42,9 +42,10 @@ describe('loadDemoData', () => {
 
   it('rejects duplicate card IDs and confirms rapid withdrawal keeps both v0.7 exemptions explicit', () => {
     const duplicate = [...loadDemoData().cards];
+    const firstCardId = (duplicate[0] as { card_id: string }).card_id;
     duplicate.push(duplicate[0]);
     const result = loadDemoData(duplicate);
-    expect(result.issues).toContainEqual(expect.objectContaining({ code: 'DUPLICATE_CARD_ID', recordId: 'DEMO-OP-001' }));
+    expect(result.issues).toContainEqual(expect.objectContaining({ code: 'DUPLICATE_CARD_ID', recordId: firstCardId }));
 
     const rapid = result.cards.find((card) => typeof card === 'object' && card !== null && 'card_id' in card && card.card_id === 'DEMO-TAC-005') as {
       effect_json: { actions: Array<Record<string, unknown>> };
